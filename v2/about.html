@@ -6,7 +6,7 @@
   <title>About ProTec Dental Laboratory | Melbourne Dental Lab</title>
   <meta name="description" content="ProTec Dental Laboratory grew from a boutique lab into a full-service hub for complex restorative and AOX cases, with locations in Burwood East and Melton, VIC.">
   <link rel="canonical" href="https://proteclab.com.au/v2/about.html">
-  <meta name="theme-color" content="#f4f1eb">
+  <meta name="theme-color" content="#FBFBFC">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ProTec Dental Laboratory">
   <meta property="og:locale" content="en_AU">
@@ -21,7 +21,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <script>document.documentElement.classList.add("js");</script>
   <script src="../assets/js/main.js" defer></script>
@@ -29,136 +29,148 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-
   <div class="topbar">
-    <div class="container topbar__row">
-      <nav class="version-switch" aria-label="Design version"><a href="../about.html" aria-label="Version 1">V1</a><a href="about.html" aria-current="page" aria-label="Version 2">V2</a><a href="../v3/about.html" aria-label="Version 3">V3</a></nav>
-      <div class="topbar__rest">
-        <div class="topbar__info">
-          <span class="topbar__hours">Mon–Fri 8am–5pm</span>
-          <span>Burwood East &amp; Melton, VIC</span>
-        </div>
-        <div class="topbar__info">
-          <a href="tel:+61398865414">03 9886 5414</a>
-          <a class="topbar__email" href="mailto:info@proteclab.com.au">info@proteclab.com.au</a>
-        </div>
-      </div>
-    </div>
+    <nav class="version-switch" aria-label="Design version"><a href="../about.html" aria-label="Version 1">V1</a><a href="about.html" aria-current="page" aria-label="Version 2">V2</a><a href="../v3/about.html" aria-label="Version 3">V3</a></nav>
   </div>
-
   <header class="site-header">
-    <div class="container header__row">
+    <div class="header__row">
       <a class="brand" href="index.html" aria-label="ProTec Dental Laboratory — home">
-        <img src="../assets/img/logo.webp" alt="ProTec Dental Laboratory" width="820" height="163">
+        <img class="logo logo--light" src="../assets/img/logo-light.png" alt="" width="820" height="163">
+        <img class="logo logo--dark" src="../assets/img/logo.png" alt="ProTec Dental Laboratory" width="820" height="163">
       </a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><span></span></button>
       <nav class="nav" id="site-nav" aria-label="Main">
         <ul class="nav__list">
-          <li><a href="index.html">Home</a></li><li><a href="services.html">Services</a></li><li><a href="technology.html">Technology</a></li><li><a href="about.html" aria-current="page">About</a></li><li><a href="contact.html">Contact</a></li>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="technology.html">Technology</a></li>
+          <li><a href="about.html" aria-current="page">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
         </ul>
-        <a class="nav-cta" href="contact.html#send-a-case">Send a case</a>
+        <div class="split split--nav">
+          <a class="btn" href="contact.html#send-a-case">Send a case</a>
+          <a class="btn btn--sq" href="contact.html#send-a-case" aria-label="Send a case"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
       </nav>
     </div>
   </header>
 
   <main id="main">
-    <header class="mast"><div class="container">
-      <ol class="crumbs"><li><a href="index.html">Home</a></li><li aria-current="page">About</li></ol>
-      <h1>A local partner for complex restorative cases</h1>
-      <p class="deck">From humble beginnings as a small, boutique lab to a full-service hub for full-arch and digital restorative work.</p>
-    </div></header>
-    <figure class="wide-photo">
-      <img src="../assets/img/technician-placeholder.webp" alt="Dental technician working on a restoration" width="1024" height="1536">
-      <figcaption>Placeholder image — replace with a real photo of the ProTec team</figcaption>
-    </figure>
+    <header class="page-hero">
+      <div class="wrap">
+        <p class="tag"><span class="dot" aria-hidden="true"></span> About</p>
+        <h1>A local partner for complex restorative cases</h1>
+        <p class="lede">From humble beginnings as a small, boutique lab to a full-service hub for full-arch and digital restorative work.</p>
+        <figure class="page-photo">
+          <img src="assets/img/v2-bench-overhead.jpg" alt="Placeholder: overhead view of a laboratory bench" width="1600" height="1000">
+        </figure>
+        <p class="photo-note" style="padding-left:0">Placeholder photos: replace with real ProTec photography.</p>
+      </div>
+    </header>
+
     <section class="section">
-      <div class="container prose-col reveal">
-        <p class="kicker">Our story</p>
-        <h2>Small beginnings, big capability</h2>
-        <p class="lede">ProTec Dental Laboratory started as a small, boutique lab and has grown into a full-service hub for complex restorative cases.</p>
-        <p>We’ve scaled our technology and expertise to take on everything from full-arch rehabilitations to intricate digital workflows. But our core hasn’t changed: a commitment to precision craftsmanship and the personal touch of a local partner.</p>
-        <p>We’re proud to partner with forward-thinking clinics who trust us with their most delicate cases. Together, we achieve remarkable results. <span class="placeholder">[Add founding year, founder story or team size if you'd like]</span></p>
-        <div class="facts"><div><strong>AOX</strong><span>Full-arch specialists</span></div><div><strong>3 sites</strong><span>Burwood East &amp; Melton</span></div><div><strong>In-house</strong><span>Design &amp; milling</span></div></div>
+      <div class="wrap feature">
+        <div>
+          <p class="tag"><span class="dot" aria-hidden="true"></span> Our story</p>
+          <h2>Small beginnings, big capability</h2>
+          <p class="lede">ProTec Dental Laboratory started as a small, boutique lab and has grown into a full-service hub for complex restorative cases.</p>
+          <p class="lede" style="margin-top:.8rem">We’ve scaled our technology and expertise to take on everything from full-arch rehabilitations to intricate digital workflows. But our core hasn’t changed: a commitment to precision craftsmanship and the personal touch of a local partner.</p>
+          <p class="lede" style="margin-top:.8rem">We’re proud to partner with forward-thinking clinics who trust us with their most delicate cases. Together, we achieve remarkable results. <span class="placeholder">[Add founding year, founder story or team size if you'd like]</span></p>
+        </div>
+        <figure class="feature__photo">
+          <img src="assets/img/v2-hero-lab.jpg" alt="Placeholder: dental laboratory milling bench" width="1600" height="900" loading="lazy">
+        </figure>
       </div>
     </section>
-    <section class="section section--paper">
-      <div class="container">
-        <p class="kicker">How we work</p>
-        <h2>Hard work, dedication and precision</h2>
-        <p class="measure">Your success is our mission. Every case we take on is driven by a commitment to excellence and to the outcome you and your patient are aiming for.</p>
-        <div class="values">
-          <article class="reveal"><span class="n">01</span><h3>We stop at nothing</h3><p>Complex cases don’t scare us. We take on every challenge and turn obstacles into solutions.</p></article>
-          <article class="reveal"><span class="n">02</span><h3>We love to explore</h3><p>Curiosity drives innovation — we’re always looking for better materials, tools and workflows.</p></article>
-          <article class="reveal"><span class="n">03</span><h3>We take it step by step</h3><p>Complex rehabilitations succeed through careful planning and checks at every stage.</p></article>
-          <article class="reveal"><span class="n">04</span><h3>We keep it simple</h3><p>Clear communication and straightforward processes, so working with us is easy.</p></article>
+
+    <section class="section" style="padding-top:0">
+      <div class="wrap">
+        <p class="tag"><span class="dot" aria-hidden="true"></span> How we work</p>
+        <h2 style="margin-top:12px;font-size:clamp(1.8rem,3vw,2.6rem);max-width:16em">Hard work, dedication and precision</h2>
+        <p class="lede" style="margin-top:10px;max-width:42em">Your success is our mission. Every case we take on is driven by a commitment to excellence and to the outcome you and your patient are aiming for.</p>
+        <div class="values" style="margin-top:1.4rem">
+          <article class="value"><span class="n">01</span><h3>We stop at nothing</h3><p>Complex cases don’t scare us. We take on every challenge and turn obstacles into solutions.</p></article>
+          <article class="value"><span class="n">02</span><h3>We love to explore</h3><p>Curiosity drives innovation — we’re always looking for better materials, tools and workflows.</p></article>
+          <article class="value"><span class="n">03</span><h3>We take it step by step</h3><p>Complex rehabilitations succeed through careful planning and checks at every stage.</p></article>
+          <article class="value"><span class="n">04</span><h3>We keep it simple</h3><p>Clear communication and straightforward processes, so working with us is easy.</p></article>
         </div>
       </div>
     </section>
-    <section class="section">
-      <div class="container">
-        <p class="kicker">Our team</p>
-        <h2>The people behind your cases</h2>
-        <p><span class="placeholder">[Add team members with photos (square, e.g. 600×600) in assets/img/team/]</span></p>
-        <div class="people"><figure class="reveal"><div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></div><h3><span class="placeholder">[Name]</span></h3><p><span class="placeholder">[Role, e.g. Director / Dental Technician]</span></p></figure><figure class="reveal"><div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></div><h3><span class="placeholder">[Name]</span></h3><p><span class="placeholder">[Role]</span></p></figure><figure class="reveal"><div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></div><h3><span class="placeholder">[Name]</span></h3><p><span class="placeholder">[Role]</span></p></figure><figure class="reveal"><div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></div><h3><span class="placeholder">[Name]</span></h3><p><span class="placeholder">[Role]</span></p></figure></div>
-      </div>
-    </section>
-    <section class="section section--paper">
-      <div class="container">
-        <p class="kicker">Locations</p>
-        <h2>Find us in Melbourne’s east and west</h2>
-        <p>Open Monday to Friday, 8am–5pm.</p>
-        <div class="places">
-          <article class="reveal"><h3>Burwood East</h3><address>265 Burwood Highway<br>Burwood East VIC 3151</address><a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=265+Burwood+Highway+Burwood+East+VIC+3151" target="_blank" rel="noopener">Open in Google Maps</a></article>
-          <article class="reveal"><h3>Burwood East</h3><address>19 Royton Street<br>Burwood East VIC 3151</address><a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=19+Royton+Street+Burwood+East+VIC+3151" target="_blank" rel="noopener">Open in Google Maps</a></article>
-          <article class="reveal"><h3>Melton</h3><address>6 O’Neills Road<br>Melton VIC 3337</address><a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=6+O%27Neills+Road+Melton+VIC+3337" target="_blank" rel="noopener">Open in Google Maps</a></article>
+
+    <section class="section" style="padding-top:0">
+      <div class="wrap">
+        <p class="tag"><span class="dot" aria-hidden="true"></span> Our team</p>
+        <h2 style="margin-top:12px;font-size:clamp(1.8rem,3vw,2.6rem)">The people behind your cases</h2>
+        <p class="lede" style="margin-top:10px"><span class="placeholder">[Add team members with photos (square, e.g. 600×600) in assets/img/team/]</span></p>
+        <div class="people" style="margin-top:1.2rem">
+          <article class="person"><div class="avatar-ph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 19a7 7 0 0114 0"/></svg></div><h3><span class="placeholder">[Name]</span></h3><p><span class="placeholder">[Role, e.g. Director / Dental Technician]</span></p></article>
+          <article class="person"><div class="avatar-ph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 19a7 7 0 0114 0"/></svg></div><h3><span class="placeholder">[Name]</span></h3><p><span class="placeholder">[Role]</span></p></article>
+          <article class="person"><div class="avatar-ph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 19a7 7 0 0114 0"/></svg></div><h3><span class="placeholder">[Name]</span></h3><p><span class="placeholder">[Role]</span></p></article>
+          <article class="person"><div class="avatar-ph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 19a7 7 0 0114 0"/></svg></div><h3><span class="placeholder">[Name]</span></h3><p><span class="placeholder">[Role]</span></p></article>
         </div>
       </div>
     </section>
-    <section class="section" style="padding-top:0"><div class="container"><div class="band"><div><h2>Let’s work together</h2><p>Tell us about your practice and the cases you’d like support with.</p></div><div class="btn-row"><a class="btn" href="contact.html#send-a-case">Send a case</a><a class="btn btn--ghost" href="tel:+61398865414">03 9886 5414</a></div></div></div></section>
+
+    <section class="section" style="padding-top:0">
+      <div class="wrap">
+        <p class="tag"><span class="dot" aria-hidden="true"></span> Locations</p>
+        <h2 style="margin-top:12px;font-size:clamp(1.8rem,3vw,2.6rem)">Find us in Melbourne’s east and west</h2>
+        <p class="lede" style="margin-top:10px">Open Monday to Friday, 8am–5pm.</p>
+        <div class="places" style="margin-top:1.2rem">
+          <article class="place"><h3>Burwood East</h3><address>265 Burwood Highway<br>Burwood East VIC 3151</address><a href="https://www.google.com/maps/search/?api=1&amp;query=265+Burwood+Highway+Burwood+East+VIC+3151" target="_blank" rel="noopener">Open in Google Maps</a></article>
+          <article class="place"><h3>Burwood East</h3><address>19 Royton Street<br>Burwood East VIC 3151</address><a href="https://www.google.com/maps/search/?api=1&amp;query=19+Royton+Street+Burwood+East+VIC+3151" target="_blank" rel="noopener">Open in Google Maps</a></article>
+          <article class="place"><h3>Melton</h3><address>6 O’Neills Road<br>Melton VIC 3337</address><a href="https://www.google.com/maps/search/?api=1&amp;query=6+O%27Neills+Road+Melton+VIC+3337" target="_blank" rel="noopener">Open in Google Maps</a></article>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <img src="../assets/img/logo.webp" alt="ProTec Dental Laboratory" width="820" height="163">
-          <p>Melbourne dental laboratory specialising in AOX full-arch implant restorations, photogrammetry and digital case planning for clinicians.</p>
-          <div class="social">
-            <a href="https://www.instagram.com/protec_dental_lab/" target="_blank" rel="noopener" aria-label="ProTec Dental Lab on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg></a>
-          </div>
-        </div>
-        <div>
-          <h2>Explore</h2>
-          <ul>
-            <li><a href="services.html">Services</a></li>
-            <li><a href="services.html#aox">AOX full-arch</a></li>
-            <li><a href="technology.html">Technology</a></li>
-            <li><a href="about.html">About us</a></li>
-            <li><a href="contact.html#send-a-case">Send a case</a></li>
-          </ul>
-        </div>
-        <div>
-          <h2>Locations</h2>
-          <ul>
-            <li><address>265 Burwood Highway<br>Burwood East VIC 3151</address></li>
-            <li><address>19 Royton Street<br>Burwood East VIC 3151</address></li>
-            <li><address>6 O’Neills Road<br>Melton VIC 3337</address></li>
-          </ul>
-        </div>
-        <div>
-          <h2>Get in touch</h2>
-          <ul>
-            <li><a href="tel:+61398865414">03 9886 5414</a></li>
-            <li><a href="mailto:info@proteclab.com.au">info@proteclab.com.au</a></li>
-            <li>Mon–Fri, 8am–5pm</li>
-          </ul>
-        </div>
+    <div class="footer-cta">
+      <div>
+        <h2>Let’s work together</h2>
+        <p>Tell us about your practice and the cases you’d like support with.</p>
       </div>
-      <div class="footer-bottom">
-        <span>© <span data-year>2026</span> ProTec Dental Laboratory. All rights reserved. ABN <span class="placeholder">[ABN]</span></span>
-        <span>Services provided to dental professionals.</span>
+      <div class="split">
+        <a class="btn" href="contact.html#send-a-case">Send a case</a>
+        <a class="btn btn--sq" href="contact.html#send-a-case" aria-label="Send a case"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
     </div>
+    <div class="footer-grid">
+      <p class="footer-lead">Melbourne dental laboratory for AOX full-arch restorations, photogrammetry and digital case planning.</p>
+      <div>
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="services.html#aox">AOX full-arch</a></li>
+          <li><a href="technology.html">Technology</a></li>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="contact.html#send-a-case">Send a case</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Locations</h3>
+        <ul>
+          <li><address>265 Burwood Highway<br>Burwood East VIC 3151</address></li>
+          <li><address>19 Royton Street<br>Burwood East VIC 3151</address></li>
+          <li><address>6 O’Neills Road<br>Melton VIC 3337</address></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Get in touch</h3>
+        <ul>
+          <li><a href="tel:+61398865414">03 9886 5414</a></li>
+          <li><a href="mailto:info@proteclab.com.au">info@proteclab.com.au</a></li>
+          <li>Mon–Fri, 8am–5pm</li>
+          <li><a href="https://www.instagram.com/protec_dental_lab/" target="_blank" rel="noopener">@protec_dental_lab</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> ProTec Dental Laboratory. All rights reserved. ABN <span class="placeholder">[ABN]</span></span>
+      <span>Services provided to dental professionals.</span>
+    </div>
+    <p class="footer-word" aria-hidden="true">PROTEC</p>
   </footer>
 </body>
 </html>
