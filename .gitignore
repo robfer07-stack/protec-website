@@ -1,0 +1,19 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+
+# Local tooling
+node_modules/
+.env
+*.log
+
+# Archives & exports (don't commit zips or raw screenshots)
+*.zip
+screenshots/
+
+# Live server config is created from htaccess.example on the host
+.htaccess

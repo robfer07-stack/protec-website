@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Send a Case & Contact | ProTec Dental Laboratory Melbourne</title>
+  <meta name="description" content="Send a case to ProTec Dental Laboratory or get in touch. Call 03 9886 5414 or email info@proteclab.com.au. Burwood East & Melton, VIC.">
+  <link rel="canonical" href="https://proteclab.com.au/contact.html">
+  <meta name="theme-color" content="#12161d">
+
+  <!-- Open Graph / social sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ProTec Dental Laboratory">
+  <meta property="og:locale" content="en_AU">
+  <meta property="og:title" content="Send a Case & Contact | ProTec Dental Laboratory Melbourne">
+  <meta property="og:description" content="Send a case to ProTec Dental Laboratory or get in touch. Call 03 9886 5414 or email info@proteclab.com.au. Burwood East & Melton, VIC.">
+  <meta property="og:url" content="https://proteclab.com.au/contact.html">
+  <meta property="og:image" content="https://proteclab.com.au/assets/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Icons -->
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Fonts (Google Fonts). Remove these 3 lines to fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script>document.documentElement.classList.add("js");</script>
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ===== Top bar ===== -->
+  <div class="topbar">
+    <div class="container">
+      <div class="topbar__info">
+        <span class="topbar__hours">Mon–Fri 8am–5pm</span>
+        <span>Burwood East &amp; Melton, VIC</span>
+      </div>
+      <div class="topbar__info">
+        <a href="tel:+61398865414">03 9886 5414</a>
+        <a class="topbar__email" href="mailto:info@proteclab.com.au">info@proteclab.com.au</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Header / navigation (same on every page) ===== -->
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html" aria-label="ProTec Dental Laboratory — home">
+        <!-- Logo: swap this one file to update the logo site-wide -->
+        <img src="assets/img/logo.webp" alt="ProTec Dental Laboratory" width="820" height="163">
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><span></span></button>
+      <nav class="nav" id="site-nav" aria-label="Main">
+        <ul class="nav__list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="technology.html">Technology</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html" aria-current="page">Contact</a></li>
+        </ul>
+        <a class="btn btn--sm" href="contact.html#send-a-case"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>Send a case</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <section class="page-hero">
+      <div class="container">
+        <ol class="breadcrumb" aria-label="Breadcrumb"><li><a href="index.html">Home</a></li><li aria-current="page">Contact</li></ol>
+        <h1>Send a case or get in touch</h1>
+        <p>Submit a new case, request a pickup or ask our technicians a question. We’re here Monday to Friday, 8am–5pm.</p>
+      </div>
+    </section>
+
+
+    <section class="section">
+      <div class="container split split--top split--form">
+
+        <!-- ===== Case submission form =====
+             MOCKUP ONLY — this form is not connected yet (action="#").
+             To make it work on HostGator, choose ONE option (details in README.md):
+               A) Formspree: set action="https://formspree.io/f/YOUR_ID" and method="POST".
+                  (File uploads require a paid Formspree plan.)
+               B) PHP mail: create send-case.php on HostGator and set action="send-case.php".
+             Large scan files are often better sent via your scanner portal or a file-transfer link. -->
+        <div class="form-card reveal" id="send-a-case">
+          <span class="eyebrow">Send a case</span>
+          <h2>Case submission</h2>
+          <p class="muted">Fill in the details below and attach your files. We’ll confirm receipt <span class="placeholder">[within X business hours]</span>.</p>
+
+          <form action="#" method="post" enctype="multipart/form-data" data-protec-form>
+            <div class="form-grid">
+              <div class="field">
+                <label for="dentist">Dentist name <span class="req" aria-hidden="true">*</span></label>
+                <input id="dentist" name="dentist" type="text" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="clinic">Clinic / practice <span class="req" aria-hidden="true">*</span></label>
+                <input id="clinic" name="clinic" type="text" autocomplete="organization" required>
+              </div>
+              <div class="field">
+                <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
+                <input id="email" name="email" type="email" autocomplete="email" required>
+              </div>
+              <div class="field">
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel">
+              </div>
+              <div class="field">
+                <label for="patient">Patient reference <span class="req" aria-hidden="true">*</span></label>
+                <input id="patient" name="patient_ref" type="text" required aria-describedby="patient-hint">
+                <span class="hint" id="patient-hint">Initials or case ID — avoid full patient names.</span>
+              </div>
+              <div class="field">
+                <label for="case-type">Case type <span class="req" aria-hidden="true">*</span></label>
+                <select id="case-type" name="case_type" required>
+                  <option value="">Select…</option>
+                  <option>AOX / full-arch</option>
+                  <option>Photogrammetry request</option>
+                  <option>Case planning / smile design</option>
+                  <option>Implant crown or bridge</option>
+                  <option>Zirconia crown or bridge</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <fieldset class="field full">
+                <legend>Arch</legend>
+                <div class="radio-row">
+                  <label><input type="radio" name="arch" value="Upper"> Upper</label>
+                  <label><input type="radio" name="arch" value="Lower"> Lower</label>
+                  <label><input type="radio" name="arch" value="Both"> Both</label>
+                  <label><input type="radio" name="arch" value="N/A" checked> N/A</label>
+                </div>
+              </fieldset>
+              <div class="field">
+                <label for="implant-system">Implant system</label>
+                <input id="implant-system" name="implant_system" type="text" placeholder="e.g. brand, platform, MUA">
+              </div>
+              <div class="field">
+                <label for="due">Required by</label>
+                <input id="due" name="due_date" type="date">
+              </div>
+              <div class="field full">
+                <label for="files">Scan files &amp; photos</label>
+                <input id="files" name="files" type="file" multiple accept=".stl,.ply,.obj,.zip,.dcm,.jpg,.jpeg,.png,.pdf" aria-describedby="files-hint">
+                <span class="hint" id="files-hint">STL, PLY, OBJ, ZIP, DICOM, photos or PDF Rx. Large files? Use your scanner’s lab portal or a file-transfer link in the notes.</span>
+              </div>
+              <div class="field full">
+                <label for="notes">Prescription &amp; notes</label>
+                <textarea id="notes" name="notes" placeholder="Shade, design preferences, occlusion, timing, pickup request…"></textarea>
+              </div>
+              <label class="checkbox full"><input type="checkbox" name="consent" required> <span>I confirm I have patient consent to share these records with ProTec Dental Laboratory. <span class="req" aria-hidden="true">*</span></span></label>
+              <div class="full">
+                <button class="btn" type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>Submit case</button>
+              </div>
+            </div>
+            <div class="form-status" tabindex="-1" hidden></div>
+          </form>
+        </div>
+
+        <!-- ===== Contact details (real details from proteclab.com.au) ===== -->
+        <aside class="reveal">
+          <span class="eyebrow">Contact</span>
+          <h2>Talk to the lab</h2>
+          <p class="muted">Questions about a case, a pickup, or working with us? Get in touch directly.</p>
+          <ul class="contact-list">
+            <li><span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 005 5L15 12l5 2v4a2 2 0 01-2 2A16 16 0 013 5a2 2 0 012-2z"/></svg></span><div><strong>Phone</strong><a href="tel:+61398865414">03 9886 5414</a></div></li>
+            <li><span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg></span><div><strong>Email</strong><a href="mailto:info@proteclab.com.au">info@proteclab.com.au</a></div></li>
+            <li><span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><strong>Hours</strong>Monday – Friday, 8am – 5pm</div></li>
+            <li><span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><div><strong>Burwood East</strong><address>265 Burwood Highway &amp; 19 Royton Street<br>Burwood East VIC 3151</address></div></li>
+            <li><span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><div><strong>Melton</strong><address>6 O’Neills Road<br>Melton VIC 3337</address></div></li>
+            <li><span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg></span><div><strong>Instagram</strong><a href="https://www.instagram.com/protec_dental_lab/" target="_blank" rel="noopener">@protec_dental_lab</a></div></li>
+          </ul>
+
+          <div class="note mt-2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+            <p><strong>Other ways to send a case:</strong> <span class="placeholder">[list scanner portals you accept (e.g. 3Shape Communicate, Medit Link, iTero)]</span> · Physical impressions: <span class="placeholder">[courier / pickup instructions]</span></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer (same on every page) ===== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="assets/img/logo-light.png" alt="ProTec Dental Laboratory" width="820" height="163">
+          <p>Melbourne dental laboratory specialising in AOX full-arch implant restorations, photogrammetry and digital case planning for clinicians.</p>
+          <div class="social">
+            <a href="https://www.instagram.com/protec_dental_lab/" target="_blank" rel="noopener" aria-label="ProTec Dental Lab on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <h2>Explore</h2>
+          <ul>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="services.html#aox">AOX full-arch</a></li>
+            <li><a href="technology.html">Technology</a></li>
+            <li><a href="about.html">About us</a></li>
+            <li><a href="contact.html#send-a-case">Send a case</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Locations</h2>
+          <ul>
+            <li><address>265 Burwood Highway<br>Burwood East VIC 3151</address></li>
+            <li><address>19 Royton Street<br>Burwood East VIC 3151</address></li>
+            <li><address>6 O’Neills Road<br>Melton VIC 3337</address></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Get in touch</h2>
+          <ul>
+            <li><a href="tel:+61398865414">03 9886 5414</a></li>
+            <li><a href="mailto:info@proteclab.com.au">info@proteclab.com.au</a></li>
+            <li>Mon–Fri, 8am–5pm</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year>2026</span> ProTec Dental Laboratory. All rights reserved. ABN <span class="placeholder">[ABN]</span></span>
+        <span>Services provided to dental professionals.</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

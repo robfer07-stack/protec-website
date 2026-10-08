@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://proteclab.com.au/sitemap.xml

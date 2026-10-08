@@ -1,0 +1,122 @@
+# ProTec Dental Laboratory — website (static mockup)
+
+A clean, responsive, multi-page website for **ProTec Dental Laboratory** (proteclab.com.au), a Melbourne dental lab specialising in **AOX / All-on-X full-arch implant restorations**.
+
+It's plain **HTML + CSS + a little vanilla JavaScript**. There's no build step, no framework and nothing to install, so the files upload straight into HostGator's `public_html`.
+
+---
+
+## What's in the project
+
+```
+protec-website/
+├── index.html          Home: hero, AOX focus, services, technology, clinician workflow, gallery, CTA
+├── services.html       AOX, photogrammetry, case planning, implant, zirconia C&B, digital workflow, FAQ
+├── technology.html     Zirkonzahn / Roland / Aidite milling, PIC & iMetric photogrammetry, materials
+├── about.html          Story, values, team (placeholders), 3 locations
+├── contact.html        Send a Case form (markup only) + contact details
+├── 404.html            "Page not found" page
+├── assets/
+│   ├── css/styles.css  ALL styling. Brand colours & fonts are at the top (":root")
+│   ├── js/main.js      Mobile menu, header shadow, scroll reveal, form notice
+│   └── img/            Logo, favicons, social image, illustration, gallery/ for case photos
+├── favicon.ico
+├── robots.txt, sitemap.xml, site.webmanifest   SEO / browser files
+├── htaccess.example    HTTPS redirect, caching, old-URL redirects (rename to .htaccess at go-live)
+├── .gitignore, .editorconfig
+└── README.md           This file (not needed on the server)
+```
+
+The **header and footer are repeated in every page** (that's how plain static sites work). If you change the menu, phone number or footer, update all 6 HTML files. In Cursor, use **Find in Files** (Ctrl/Cmd + Shift + F) and replace them all at once.
+
+---
+
+## 1. Preview it locally
+
+Any one of these works:
+
+- **Easiest:** double-click `index.html` to open it in your browser.
+- **In Cursor:** install the **"Live Server"** extension, then right-click `index.html` → *Open with Live Server*. The page reloads every time you save.
+- **Terminal:** run `python3 -m http.server 8000` in this folder, then open http://localhost:8000
+
+## 2. Edit in Cursor
+
+1. In Cursor, go to **File → Open Folder…** and pick the `protec-website` folder.
+2. Common edits:
+   - **Text:** edit the `.html` files directly. Each section is labelled with a comment like `<!-- ===== Services overview ===== -->`.
+   - **Colours / fonts / spacing:** change the variables at the top of `assets/css/styles.css` (`--brand`, `--ink`, and so on).
+   - **Logo:** replace `assets/img/logo.webp` (header) and `assets/img/logo-light.png` (footer, for the dark background). Keep the same file names, or update the `<img>` tags.
+   - **Photos:** put case photos in `assets/img/gallery/`, then swap each placeholder `<figure>` in `index.html` for the `<img>` line shown in the comment above it.
+3. Ask Cursor's AI for help, for example: *"Add a Digital Dentures section to services.html that matches the existing service blocks."*
+
+## 3. Put it on GitHub
+
+A local git repo with an initial commit is already set up. To publish it:
+
+```bash
+# 1. Create an empty repo on github.com (e.g. "protec-website"). Don't add a README.
+# 2. In this folder:
+git remote add origin https://github.com/<your-username>/protec-website.git
+git branch -M main
+git push -u origin main
+```
+
+After that, the routine is: edit, then `git add -A`, then `git commit -m "Describe the change"`, then `git push`. You can also do this from Cursor's Source Control panel.
+
+## 4. Upload to HostGator
+
+> ⚠️ **Your domain currently runs a WordPress site in `public_html`.** Uploading these files on top of it will mix the two sites. Choose one of these:
+> - **Test first (recommended):** upload into a subfolder, e.g. `public_html/new/`, and preview it at `https://proteclab.com.au/new/`. (In that case, delete the `<base href="/">` line in `404.html`.)
+> - **Go live:** back up WordPress first (cPanel → *Backup*, or download `public_html` plus the database). Then remove or move the WordPress files out of `public_html` and upload this site.
+
+**Option A: cPanel File Manager (no extra software)**
+1. Zip the *contents* of this folder (not the folder itself). Leave out `.git`, `README.md` and the `.zip`.
+2. Log in to HostGator → **cPanel → File Manager → public_html** (or your test subfolder).
+3. Click **Upload**, choose the zip, then right-click it → **Extract**. Delete the zip afterwards.
+4. Make sure `index.html` sits directly inside `public_html`, not inside a nested folder.
+
+**Option B: FTP (FileZilla)**
+1. cPanel → **FTP Accounts** to get or create the login. The host is usually `ftp.proteclab.com.au`, port 21.
+2. Connect with FileZilla and drag the files into `public_html`.
+
+**At go-live:**
+- In cPanel, check **SSL/TLS Status** to confirm the free SSL certificate is active.
+- Rename `htaccess.example` to `.htaccess` in `public_html`. This forces HTTPS, enables caching and redirects the old WordPress URLs (`/about-2/` and so on). Enable "Show hidden files" in File Manager to see it.
+- Submit `https://proteclab.com.au/sitemap.xml` in Google Search Console.
+
+## 5. Make the Send a Case form work
+
+The form on `contact.html` is **markup only** (`action="#"`). Until it's connected, submitting shows a "Mockup only — please call or email" message. Pick one option:
+
+- **Formspree (simplest):** sign up at formspree.io and create a form. Then change the form tag to
+  `<form action="https://formspree.io/f/YOUR_ID" method="post" enctype="multipart/form-data" data-protec-form>`.
+  Submissions are emailed to you. *File uploads need a paid Formspree plan.*
+- **PHP mail on HostGator:** create `send-case.php` to validate the fields and email them to info@proteclab.com.au, and set `action="send-case.php"`. Add spam protection (a honeypot field or reCAPTCHA). Cursor can write this file for you.
+- **Large scan files:** STL/PLY files and photogrammetry data can be big. Many labs accept them through scanner portals (3Shape Communicate, Medit Link, iTero, etc.) or a file-transfer link. List the options you accept on the page.
+
+Don't collect full patient names. The form asks for a patient reference instead.
+
+---
+
+## Placeholders to replace
+
+Everything that still needs real content is marked in **striped orange `[square brackets]`**. Search the code for `placeholder` or `[` to find each one.
+
+| Where | What to add |
+|---|---|
+| Footer (all pages) | ABN |
+| Home → testimonial | A real, approved clinician quote and name. The current one is labelled *Example testimonial*. |
+| Home → gallery | 6 case photos (with patient consent) |
+| Home / Services → AOX | Confirm: try-in / prototype stage, immediate provisionals, zirconia/titanium options |
+| Services | Component policy, C&B materials, shade process, scanner portals, turnaround times, courier/pickup |
+| Technology | Machine models and photos for Zirkonzahn, Roland and Aidite; CAD software; materials list |
+| About | Founding year or story, team names, roles and photos, real team photo (the current one is an AI image taken from the existing site) |
+| Contact | Response time, scanner portals, courier instructions, form handler |
+
+**Real details already used** (taken from the current proteclab.com.au): phone 03 9886 5414, info@proteclab.com.au, hours Mon–Fri 8am–5pm, 265 Burwood Highway and 19 Royton Street, Burwood East VIC 3151, and 6 O'Neills Road, Melton VIC 3337, Instagram @protec_dental_lab, plus the AOX, photogrammetry (PIC & iMetric) and case planning service descriptions. Please double-check them.
+
+## Notes
+
+- Fonts load from Google Fonts (Inter and Manrope). To use system fonts only, delete the 3 font lines in each page's `<head>`.
+- Brand names (Zirkonzahn, Roland, Aidite, PIC, iMetric) appear as text. Only add their logos if you have permission.
+- Accessibility: the pages include a skip link, semantic landmarks, visible focus styles, labelled form fields and reduced-motion support. Keep `alt` text on any new images.
