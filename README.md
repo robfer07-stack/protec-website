@@ -16,7 +16,7 @@ protec-website/
 ├── about.html          Story, values, team (placeholders), 3 locations
 ├── contact.html        Send a Case form (markup only) + contact details
 ├── 404.html            "Page not found" page
-├── v2/                 Version 2 — same pages, editorial layout (see Design versions)
+├── v2/                 Version 2 — same pages, rounded photo-led layout (see Design versions)
 ├── v3/                 Version 3 — same pages, photo-led lab layout (orange accent)
 ├── assets/
 │   ├── css/styles.css  ALL styling. Brand colours & fonts are at the top (":root")
@@ -39,7 +39,7 @@ Three visual directions of the same site sit side by side so one can be chosen:
 | | Where | Direction |
 |---|---|---|
 | **Version 1** | repo root (`index.html`, `services.html`, …) | The current site |
-| **Version 2** | `/v2/` | Light, airy clinical-editorial layout |
+| **Version 2** | `/v2/` | Rounded photo-led layout: light grotesk, orange split buttons, inset hero, giant footer wordmark. Placeholder photos are marked in the alt text. |
 | **Version 3** | `/v3/` | Photo-led lab layout: large light headlines, round photo crops, orange pills, dark bands. Placeholder photos are marked in the alt text. |
 
 Every page has **V1 V2 V3** in the black bar at the top left. The highlighted one is the version you’re on; the others open the same page in that version (or that version’s home if the page doesn’t exist).
