@@ -19,6 +19,7 @@ protec-website/
 ├── assets/
 │   ├── css/styles.css  ALL styling. Brand colours & fonts are at the top (":root")
 │   ├── js/main.js      Mobile menu, header shadow, scroll reveal, form notice
+│   ├── js/review.js    Preview-only review/feedback tool (see section 6)
 │   └── img/            Logo, favicons, social image, illustration, gallery/ for case photos
 ├── favicon.ico
 ├── robots.txt, sitemap.xml, site.webmanifest   SEO / browser files
@@ -66,7 +67,7 @@ After that, the routine is: edit, then `git add -A`, then `git commit -m "Descri
 ## 4. Upload to HostGator
 
 > ⚠️ **Your domain currently runs a WordPress site in `public_html`.** Uploading these files on top of it will mix the two sites. Choose one of these:
-> - **Test first (recommended):** upload into a subfolder, e.g. `public_html/new/`, and preview it at `https://proteclab.com.au/new/`. (In that case, delete the `<base href="/">` line in `404.html`.)
+> - **Test first (recommended):** upload into a subfolder, e.g. `public_html/new/`, and preview it at `https://proteclab.com.au/new/`. (In that case, set `SITE_ROOT = "/new/"` in the small script at the top of `404.html`.)
 > - **Go live:** back up WordPress first (cPanel → *Backup*, or download `public_html` plus the database). Then remove or move the WordPress files out of `public_html` and upload this site.
 
 **Option A: cPanel File Manager (no extra software)**
@@ -95,6 +96,19 @@ The form on `contact.html` is **markup only** (`action="#"`). Until it's connect
 - **Large scan files:** STL/PLY files and photogrammetry data can be big. Many labs accept them through scanner portals (3Shape Communicate, Medit Link, iTero, etc.) or a file-transfer link. List the options you accept on the page.
 
 Don't collect full patient names. The form asks for a patient reference instead.
+
+## 6. Review mode (preview feedback tool)
+
+The GitHub Pages preview has a built-in feedback tool (`assets/js/review.js`):
+
+1. Open the preview and press the orange **Review** button (bottom-right).
+2. Hover or tap the part of the page you want changed (keyboard: Tab / arrow keys, then Enter; **Esc** cancels). Links and buttons don't fire while you're picking.
+3. Write *What should change?*, optionally choose **Nice to have / Important / Must fix**, and press **Add comment**. Each comment gets a numbered pin on the page. Add as many as you like, across several pages. They're saved in your browser, so a refresh won't lose them.
+4. Press **Comments → Send to ProTec Website bot**. GitHub opens with a new issue already filled in (label `site-feedback`, page, element, CSS selector, screen size, priority, time). Press **Submit new issue**, then clear the sent comments.
+
+Long batches are split into several issues automatically. If one comment is too long for a link, the text is copied to your clipboard so you can paste it into the issue.
+
+**When it shows:** only on `*.github.io`, or on any address with `?review=1` (remembered in that browser). `?review=0` hides it again. On the real domain it stays hidden unless you add `?review=1`. At go-live you can also delete `assets/js/review.js` and its `<script>` line from each page.
 
 ---
 

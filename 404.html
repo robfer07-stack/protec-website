@@ -2,8 +2,24 @@
 <html lang="en-AU">
 <head>
   <meta charset="utf-8">
-  <!-- base href makes assets load on nested 404 URLs; remove if the site lives in a subfolder -->
-  <base href="/">
+  <!-- 404 pages are served at whatever URL was missing (e.g. /a/b/c), so relative
+       links need a <base> pointing at the site root. Worked out at runtime so the
+       same file works on GitHub Pages (/protec-website/) and at a domain root (/).
+       Testing in a HostGator subfolder? Set SITE_ROOT below, e.g. "/new/". -->
+  <script>
+    (function () {
+      var SITE_ROOT = ""; // leave empty to auto-detect
+      var root = SITE_ROOT || "/";
+      if (!SITE_ROOT && /\.github\.io$/i.test(location.hostname)) {
+        // GitHub *project* Pages sites live under /<repo>/, e.g. /protec-website/
+        var m = location.pathname.match(/^\/[^\/]+\//);
+        if (m) root = m[0];
+      }
+      var base = document.createElement("base");
+      base.href = root;
+      document.head.appendChild(base);
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Page not found | ProTec Dental Laboratory</title>
   <meta name="description" content="The page you were looking for could not be found.">
@@ -34,6 +50,8 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <script>document.documentElement.classList.add("js");</script>
   <script src="assets/js/main.js" defer></script>
+  <!-- Preview-only review tool: inactive unless on *.github.io or ?review=1 (safe to delete at go-live) -->
+  <script src="assets/js/review.js" defer></script>
   <meta name="robots" content="noindex">
 </head>
 <body>
