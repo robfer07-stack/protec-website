@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <script>
     (function () {
-      var SITE_ROOT = ""; // leave empty to auto-detect; set e.g. "/new/" for a HostGator test folder
+      var SITE_ROOT = "";
       var VERSION = "v3";
       var path = location.pathname;
       var root = SITE_ROOT || "/";
@@ -28,23 +28,15 @@
   <title>Page not found | ProTec Dental Laboratory</title>
   <meta name="description" content="The page you were looking for could not be found.">
   <link rel="canonical" href="https://proteclab.com.au/v3/404.html">
-  <meta name="theme-color" content="#07080a">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="ProTec Dental Laboratory">
-  <meta property="og:locale" content="en_AU">
-  <meta property="og:title" content="Page not found | ProTec Dental Laboratory">
-  <meta property="og:description" content="The page you were looking for could not be found.">
-  <meta property="og:url" content="https://proteclab.com.au/v3/404.html">
-  <meta property="og:image" content="https://proteclab.com.au/assets/img/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f6f1eb">
+  <meta name="robots" content="noindex">
   <link rel="icon" href="../favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
   <link rel="manifest" href="../site.webmanifest">
-  <meta name="robots" content="noindex">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <script>document.documentElement.classList.add("js");</script>
   <script src="../assets/js/main.js" defer></script>
@@ -52,28 +44,15 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-
   <div class="topbar">
     <div class="container topbar__row">
       <nav class="version-switch" aria-label="Design version"><a href="../404.html" aria-label="Version 1">V1</a><a href="../v2/404.html" aria-label="Version 2">V2</a><a href="404.html" aria-current="page" aria-label="Version 3">V3</a></nav>
-      <div class="topbar__rest">
-        <div class="topbar__info">
-          <span class="topbar__hours">Mon–Fri 8am–5pm</span>
-          <span>Burwood East &amp; Melton, VIC</span>
-        </div>
-        <div class="topbar__info">
-          <a href="tel:+61398865414">03 9886 5414</a>
-          <a class="topbar__email" href="mailto:info@proteclab.com.au">info@proteclab.com.au</a>
-        </div>
-      </div>
+      <div class="topbar__rest"><span class="topbar__hours">Mon–Fri 8am–5pm</span><a href="tel:+61398865414">03 9886 5414</a><a class="topbar__email" href="mailto:info@proteclab.com.au">info@proteclab.com.au</a></div>
     </div>
   </div>
-
   <header class="site-header">
     <div class="container header__row">
-      <a class="brand" href="index.html" aria-label="ProTec Dental Laboratory — home">
-        <img src="../assets/img/logo-light.png" alt="ProTec Dental Laboratory" width="820" height="163">
-      </a>
+      <a class="brand" href="index.html" aria-label="ProTec Dental Laboratory — home"><img src="../assets/img/logo.png" alt="ProTec Dental Laboratory" width="820" height="163"></a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><span></span></button>
       <nav class="nav" id="site-nav" aria-label="Main">
         <ul class="nav__list">
@@ -83,52 +62,22 @@
       </nav>
     </div>
   </header>
-
   <main id="main">
-    <section class="error"><div class="container"><p class="mono">Error</p><div class="code">404</div><h1>Page not found</h1><p class="lede">The page you’re looking for has moved or doesn’t exist.</p><div class="btn-row"><a class="btn" href="index.html">Back to home</a><a class="btn btn--ghost" href="contact.html">Contact us</a></div></div></section>
+    <section class="error"><div class="container"><p class="kicker">Error</p><h1>Page not found</h1><p class="lede">The page you’re looking for has moved or doesn’t exist.</p><div class="btn-row"><a class="btn" href="index.html">Back to home</a><a class="btn btn--line" href="contact.html">Contact us</a></div></div></section>
   </main>
-
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
           <img src="../assets/img/logo-light.png" alt="ProTec Dental Laboratory" width="820" height="163">
           <p>Melbourne dental laboratory specialising in AOX full-arch implant restorations, photogrammetry and digital case planning for clinicians.</p>
-          <div class="social">
-            <a href="https://www.instagram.com/protec_dental_lab/" target="_blank" rel="noopener" aria-label="ProTec Dental Lab on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg></a>
-          </div>
         </div>
-        <div>
-          <h2>Explore</h2>
-          <ul>
-            <li><a href="services.html">Services</a></li>
-            <li><a href="services.html#aox">AOX full-arch</a></li>
-            <li><a href="technology.html">Technology</a></li>
-            <li><a href="about.html">About us</a></li>
-            <li><a href="contact.html#send-a-case">Send a case</a></li>
-          </ul>
-        </div>
-        <div>
-          <h2>Locations</h2>
-          <ul>
-            <li><address>265 Burwood Highway<br>Burwood East VIC 3151</address></li>
-            <li><address>19 Royton Street<br>Burwood East VIC 3151</address></li>
-            <li><address>6 O’Neills Road<br>Melton VIC 3337</address></li>
-          </ul>
-        </div>
-        <div>
-          <h2>Get in touch</h2>
-          <ul>
-            <li><a href="tel:+61398865414">03 9886 5414</a></li>
-            <li><a href="mailto:info@proteclab.com.au">info@proteclab.com.au</a></li>
-            <li>Mon–Fri, 8am–5pm</li>
-          </ul>
-        </div>
+        <div><h2>Explore</h2><ul><li><a href="services.html">Services</a></li><li><a href="technology.html">Technology</a></li><li><a href="about.html">About us</a></li><li><a href="contact.html#send-a-case">Send a case</a></li></ul></div>
+        <div><h2>Locations</h2><ul><li><address>265 Burwood Highway<br>Burwood East VIC 3151</address></li><li><address>19 Royton Street<br>Burwood East VIC 3151</address></li><li><address>6 O’Neills Road<br>Melton VIC 3337</address></li></ul></div>
+        <div><h2>Get in touch</h2><ul><li><a href="tel:+61398865414">03 9886 5414</a></li><li><a href="mailto:info@proteclab.com.au">info@proteclab.com.au</a></li><li>Mon–Fri, 8am–5pm</li></ul></div>
       </div>
-      <div class="footer-bottom">
-        <span>© <span data-year>2026</span> ProTec Dental Laboratory. All rights reserved. ABN <span class="placeholder">[ABN]</span></span>
-        <span>Services provided to dental professionals.</span>
-      </div>
+      <p class="footer-mark" aria-hidden="true">Precision-milled<br>full-arch</p>
+      <div class="footer-bottom"><span>© <span data-year>2026</span> ProTec Dental Laboratory. All rights reserved. ABN <span class="placeholder">[ABN]</span></span><span>Services provided to dental professionals.</span></div>
     </div>
   </footer>
 </body>
