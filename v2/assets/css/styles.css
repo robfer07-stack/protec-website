@@ -145,10 +145,7 @@ ul, ol { margin: 0 0 1em; padding-left: 1.15em; }
 .hero-notes { list-style: none; margin: 0; padding: 0; display: grid; gap: .85rem; }
 .hero-notes li { padding-top: .7rem; border-top: 1px solid var(--line); font-size: .95rem; color: var(--ink); }
 
-.stage {
-  background: var(--stage);
-  margin-inline: calc(var(--gutter) * -0.15);
-}
+.stage { background: var(--stage); }
 .stage figure { margin: 0; }
 .stage img { width: min(920px, 100%); margin-inline: auto; padding: clamp(1rem, 3vw, 2.2rem) clamp(1rem, 4vw, 3rem) 0; }
 .stage figcaption {
@@ -226,7 +223,7 @@ ul, ol { margin: 0 0 1em; padding-left: 1.15em; }
 .timeline p { margin: 0; color: var(--muted); }
 
 /* Gallery — large fields, generous gaps */
-.gallery { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.4rem; }
+.gallery { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1.4rem; }
 .gallery figure {
   margin: 0; min-height: 220px; grid-column: span 2;
   display: grid; place-items: center; text-align: center; color: var(--logo-grey);
@@ -236,7 +233,7 @@ ul, ol { margin: 0 0 1em; padding-left: 1.15em; }
   padding: 1.2rem;
 }
 .gallery figure:first-child { grid-column: 1 / -1; min-height: 380px; }
-.gallery figcaption strong { display: block; color: var(--ink); font-family: var(--font-head); font-size: 1.35rem; font-weight: 520; margin-bottom: .2rem; }
+.gallery figcaption strong { display: block; color: var(--ink); font-family: var(--font-head); font-size: 1.35rem; font-weight: 520; margin-bottom: .2rem; overflow-wrap: anywhere; }
 .gallery svg { width: 32px; height: 32px; margin: 0 auto .7rem; color: #b7b1a8; }
 
 /* Quote */
@@ -413,7 +410,7 @@ fieldset.field { border: 0; padding: 0; margin: 0 0 1.25rem; }
   .brands, .journey, .values, .people, .places, .defs { grid-template-columns: 1fr 1fr; }
   .brand-col + .brand-col { border-left: 0; border-top: 1px solid var(--line); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
-  .gallery { grid-template-columns: 1fr 1fr; }
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .gallery figure, .gallery figure:first-child { grid-column: span 1; min-height: 200px; }
   .gallery figure:first-child { grid-column: 1 / -1; min-height: 260px; }
 }
