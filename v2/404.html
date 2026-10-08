@@ -2,18 +2,22 @@
 <html lang="en-AU">
 <head>
   <meta charset="utf-8">
-  <!-- 404 pages are served at whatever URL was missing (e.g. /a/b/c), so relative
-       links need a <base> pointing at the site root. Worked out at runtime so the
-       same file works on GitHub Pages (/protec-website/) and at a domain root (/).
-       Testing in a HostGator subfolder? Set SITE_ROOT below, e.g. "/new/". -->
   <script>
     (function () {
-      var SITE_ROOT = ""; // leave empty to auto-detect
+      var SITE_ROOT = ""; // leave empty to auto-detect; set e.g. "/new/" for a HostGator test folder
+      var VERSION = "v2";
+      var path = location.pathname;
       var root = SITE_ROOT || "/";
       if (!SITE_ROOT && /\.github\.io$/i.test(location.hostname)) {
-        // GitHub *project* Pages sites live under /<repo>/, e.g. /protec-website/
-        var m = location.pathname.match(/^\/[^\/]+\//);
+        var m = path.match(/^\/[^\/]+\//);
         if (m) root = m[0];
+      } else if (!SITE_ROOT) {
+        var idx = path.indexOf("/" + VERSION + "/");
+        if (idx !== -1) root = path.slice(0, idx + VERSION.length + 2);
+      }
+      if (root.charAt(root.length - 1) !== "/") root += "/";
+      if (path.indexOf("/" + VERSION + "/") !== -1 && root.indexOf("/" + VERSION + "/") === -1) {
+        root += VERSION + "/";
       }
       var base = document.createElement("base");
       base.href = root;
@@ -23,48 +27,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Page not found | ProTec Dental Laboratory</title>
   <meta name="description" content="The page you were looking for could not be found.">
-  <link rel="canonical" href="https://proteclab.com.au/404.html">
-  <meta name="theme-color" content="#12161d">
-
-  <!-- Open Graph / social sharing -->
+  <link rel="canonical" href="https://proteclab.com.au/v2/404.html">
+  <meta name="theme-color" content="#f4f1eb">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ProTec Dental Laboratory">
   <meta property="og:locale" content="en_AU">
   <meta property="og:title" content="Page not found | ProTec Dental Laboratory">
   <meta property="og:description" content="The page you were looking for could not be found.">
-  <meta property="og:url" content="https://proteclab.com.au/404.html">
+  <meta property="og:url" content="https://proteclab.com.au/v2/404.html">
   <meta property="og:image" content="https://proteclab.com.au/assets/img/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-
-  <!-- Icons -->
-  <link rel="icon" href="favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
-  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
-  <link rel="manifest" href="site.webmanifest">
-
-  <!-- Fonts (Google Fonts). Remove these 3 lines to fall back to system fonts. -->
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta name="robots" content="noindex">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <script>document.documentElement.classList.add("js");</script>
-  <script src="assets/js/main.js" defer></script>
-  <!-- Preview-only review tool: inactive unless on *.github.io or ?review=1 (safe to delete at go-live) -->
-  <script src="assets/js/review.js" defer></script>
-  <meta name="robots" content="noindex">
+  <script src="../assets/js/main.js" defer></script>
+  <script src="../assets/js/review.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ===== Top bar ===== -->
   <div class="topbar">
-    <div class="container">
-      <nav class="version-switch" aria-label="Design version">
-        <a href="404.html" aria-current="page" aria-label="Version 1">V1</a>
-        <a href="v2/404.html" aria-label="Version 2">V2</a>
-        <a href="v3/404.html" aria-label="Version 3">V3</a>
-      </nav>
+    <div class="container topbar__row">
+      <nav class="version-switch" aria-label="Design version"><a href="../404.html" aria-label="Version 1">V1</a><a href="404.html" aria-current="page" aria-label="Version 2">V2</a><a href="../v3/404.html" aria-label="Version 3">V3</a></nav>
       <div class="topbar__rest">
         <div class="topbar__info">
           <span class="topbar__hours">Mon–Fri 8am–5pm</span>
@@ -78,47 +69,30 @@
     </div>
   </div>
 
-  <!-- ===== Header / navigation (same on every page) ===== -->
   <header class="site-header">
-    <div class="container">
+    <div class="container header__row">
       <a class="brand" href="index.html" aria-label="ProTec Dental Laboratory — home">
-        <!-- Logo: swap this one file to update the logo site-wide -->
-        <img src="assets/img/logo.webp" alt="ProTec Dental Laboratory" width="820" height="163">
+        <img src="../assets/img/logo.webp" alt="ProTec Dental Laboratory" width="820" height="163">
       </a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><span></span></button>
       <nav class="nav" id="site-nav" aria-label="Main">
         <ul class="nav__list">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="technology.html">Technology</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
+          <li><a href="index.html">Home</a></li><li><a href="services.html">Services</a></li><li><a href="technology.html">Technology</a></li><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li>
         </ul>
-        <a class="btn btn--sm" href="contact.html#send-a-case"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>Send a case</a>
+        <a class="nav-cta" href="contact.html#send-a-case">Send a case</a>
       </nav>
     </div>
   </header>
 
   <main id="main">
-    <section class="section error-page">
-      <div class="container">
-        <div class="code">404</div>
-        <h1>Page not found</h1>
-        <p class="lead">The page you’re looking for has moved or doesn’t exist.</p>
-        <div class="btn-row" style="justify-content:center">
-          <a class="btn" href="index.html">Back to home</a>
-          <a class="btn btn--ghost" href="contact.html">Contact us</a>
-        </div>
-      </div>
-    </section>
+    <section class="section error"><div class="container"><div class="code">404</div><h1>Page not found</h1><p class="lede">The page you’re looking for has moved or doesn’t exist.</p><div class="center-actions"><a class="btn" href="index.html">Back to home</a><a class="btn btn--ghost" href="contact.html">Contact us</a></div></div></section>
   </main>
 
-  <!-- ===== Footer (same on every page) ===== -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="assets/img/logo-light.png" alt="ProTec Dental Laboratory" width="820" height="163">
+          <img src="../assets/img/logo.webp" alt="ProTec Dental Laboratory" width="820" height="163">
           <p>Melbourne dental laboratory specialising in AOX full-arch implant restorations, photogrammetry and digital case planning for clinicians.</p>
           <div class="social">
             <a href="https://www.instagram.com/protec_dental_lab/" target="_blank" rel="noopener" aria-label="ProTec Dental Lab on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg></a>

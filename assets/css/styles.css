@@ -142,10 +142,20 @@ ul, ol { margin: 0 0 1em; padding-left: 1.2em; }
 
 /* Top bar + header */
 .topbar { background: var(--ink); color: #b9c1cb; font-size: .85rem; }
-.topbar .container { display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 38px; }
+.topbar .container { display: flex; justify-content: space-between; align-items: center; gap: .75rem 1rem; min-height: 38px; flex-wrap: wrap; }
 .topbar a { color: #fff; text-decoration: none; }
 .topbar a:hover { color: #ff8a6e; }
+.topbar__rest { display: flex; align-items: center; justify-content: flex-end; gap: .35rem 1.4rem; flex-wrap: wrap; margin-left: auto; }
 .topbar__info { display: flex; gap: 1.4rem; flex-wrap: wrap; }
+
+/* Version switcher — top left of the black bar on every page */
+.version-switch { display: flex; align-items: center; gap: .1rem; flex: 0 0 auto; }
+.version-switch a {
+  color: #9aa4b0; text-decoration: none; font-weight: 700; font-size: .72rem;
+  letter-spacing: .08em; padding: .22rem .42rem; border-radius: 4px; line-height: 1;
+}
+.version-switch a:hover { color: #fff; }
+.version-switch a[aria-current="page"] { color: #fff; background: var(--brand); }
 
 .site-header {
   position: sticky; top: 0; z-index: 100;

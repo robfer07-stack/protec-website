@@ -16,6 +16,8 @@ protec-website/
 ├── about.html          Story, values, team (placeholders), 3 locations
 ├── contact.html        Send a Case form (markup only) + contact details
 ├── 404.html            "Page not found" page
+├── v2/                 Version 2 — same pages, editorial layout (see Design versions)
+├── v3/                 Version 3 — same pages, engineering layout
 ├── assets/
 │   ├── css/styles.css  ALL styling. Brand colours & fonts are at the top (":root")
 │   ├── js/main.js      Mobile menu, header shadow, scroll reveal, form notice
@@ -29,6 +31,22 @@ protec-website/
 ```
 
 The **header and footer are repeated in every page** (that's how plain static sites work). If you change the menu, phone number or footer, update all 6 HTML files. In Cursor, use **Find in Files** (Ctrl/Cmd + Shift + F) and replace them all at once.
+
+## Design versions
+
+Three visual directions of the same site sit side by side so one can be chosen:
+
+| | Where | Direction |
+|---|---|---|
+| **Version 1** | repo root (`index.html`, `services.html`, …) | The current site |
+| **Version 2** | `/v2/` | Light, airy clinical-editorial layout |
+| **Version 3** | `/v3/` | High-contrast, precision-engineering layout |
+
+Every page has **V1 V2 V3** in the black bar at the top left. The highlighted one is the version you’re on; the others open the same page in that version (or that version’s home if the page doesn’t exist).
+
+V2 and V3 reuse the shared images and scripts in `assets/`. Each has its own stylesheet (`v2/assets/css/styles.css`, `v3/assets/css/styles.css`). Copy, business details and orange placeholders match Version 1.
+
+Once a version is chosen, delete the other two folders (and the version switcher in the top bar) and keep the winner at the site root. No build step — the files still upload as they are.
 
 ---
 

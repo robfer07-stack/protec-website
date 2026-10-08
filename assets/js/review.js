@@ -133,6 +133,14 @@
     return last || "index.html";
   }
 
+  // Design comparison: /v2/ and /v3/ are alternate versions; everything else is Version 1.
+  function siteVersion(path) {
+    var p = "/" + String(path || "");
+    if (/\/v3(\/|$)/.test(p)) return "3";
+    if (/\/v2(\/|$)/.test(p)) return "2";
+    return "1";
+  }
+
   function priorityLabel(v) {
     for (var i = 0; i < PRIORITIES.length; i++) if (PRIORITIES[i].value === v) return PRIORITIES[i].label;
     return "";
@@ -769,7 +777,7 @@
     var num = isEdit ? indexOf(draft.id) + 1 : comments.length + 1;
     els.panelTitle.innerHTML = "";
     els.panelTitle.appendChild(document.createTextNode((isEdit ? "Edit comment " : "New comment ") + num));
-    els.panelTitle.appendChild(h("small", { text: pageLabel(isEdit ? byId(draft.id).path : location.pathname) + (draft.section ? " · " + draft.section : "") }));
+    els.panelTitle.appendChild(h("small", { text: "Version " + siteVersion(isEdit ? byId(draft.id).path : location.pathname) + " · " + pageLabel(isEdit ? byId(draft.id).path : location.pathname) + (draft.section ? " · " + draft.section : "") }));
 
     var errEl = h("p", { class: "err", hidden: true, id: "pr-err" });
     var ta = h("textarea", { id: "pr-text", maxlength: "2000", rows: "4", "aria-describedby": "pr-err", placeholder: "e.g. Make this heading bigger, change the wording to …, swap this photo" });
@@ -862,7 +870,7 @@
       pages.sort(function (a, b) { return (b === location.pathname) - (a === location.pathname); });
       pages.forEach(function (path) {
         var here = path === location.pathname;
-        els.panelBody.appendChild(h("p", { class: "group", text: pageLabel(path) + (here ? " (this page)" : "") }));
+        els.panelBody.appendChild(h("p", { class: "group", text: "Version " + siteVersion(path) + " · " + pageLabel(path) + (here ? " (this page)" : "") }));
         var ol = h("ol", { class: "list" });
         comments.forEach(function (c, i) {
           if (c.path !== path) return;
@@ -925,6 +933,7 @@
     lines.push(c.comment.split("\n").map(function (l) { return "> " + l; }).join("\n"));
     lines.push("");
     lines.push("- **Page:** [" + pageLabel(c.path) + "](" + c.url + ") (`" + c.path + "`)");
+    lines.push("- **Version:** " + siteVersion(c.path));
     if (c.section) lines.push("- **Section:** " + c.section);
     lines.push("- **Element:** `<" + c.tag + ">` — “" + c.snippet.replace(/[`]/g, "'") + "”");
     lines.push("- **Selector:** `" + c.selector.replace(/`/g, "'") + "`");
