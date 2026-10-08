@@ -233,7 +233,7 @@ ul, ol { margin: 0 0 1em; padding-left: 1.15em; }
   padding: 1.2rem;
 }
 .gallery figure:first-child { grid-column: 1 / -1; min-height: 380px; }
-.gallery figcaption strong { display: block; color: var(--ink); font-family: var(--font-head); font-size: 1.35rem; font-weight: 520; margin-bottom: .2rem; overflow-wrap: anywhere; }
+.gallery figcaption strong { display: block; color: var(--ink); font-family: var(--font-head); font-size: 1.35rem; font-weight: 520; margin-bottom: .2rem; overflow-wrap: normal; word-break: normal; }
 .gallery svg { width: 32px; height: 32px; margin: 0 auto .7rem; color: #b7b1a8; }
 
 /* Quote */
@@ -431,7 +431,8 @@ fieldset.field { border: 0; padding: 0; margin: 0 0 1.25rem; }
   .topbar__hours { display: none; }
 }
 @media (max-width: 680px) {
-  .brands, .journey, .values, .people, .places, .defs, .form-grid, .footer-grid { grid-template-columns: 1fr; }
+  .brands, .journey, .values, .people, .places, .defs, .form-grid, .footer-grid, .gallery { grid-template-columns: 1fr; }
+  .gallery figure, .gallery figure:first-child { grid-column: auto; min-height: 180px; }
   .index a { grid-template-columns: 2.4rem minmax(0, 1fr); }
   .index__go { grid-column: 2; }
   .topbar__email { display: none; }
