@@ -117,14 +117,13 @@ Don't collect full patient names. The form asks for a patient reference instead.
 
 ## 6. Review mode (preview feedback tool)
 
-The GitHub Pages preview has a built-in feedback tool (`assets/js/review.js`):
+The GitHub Pages preview has a built-in feedback tool (`assets/js/review.js`). It only keeps a list of change notes in the browser. Nothing is committed, and nothing is sent anywhere.
 
 1. Open the preview and press the orange **Review** button (bottom-right).
 2. Hover or tap the part of the page you want changed (keyboard: Tab / arrow keys, then Enter; **Esc** cancels). Links and buttons don't fire while you're picking.
-3. Write *What should change?*, optionally choose **Nice to have / Important / Must fix**, and press **Add comment**. Each comment gets a numbered pin on the page. Add as many as you like, across several pages. They're saved in your browser, so a refresh won't lose them.
-4. Press **Comments → Send to ProTec Website bot**. GitHub opens with a new issue already filled in (label `site-feedback`, page, element, CSS selector, screen size, priority, time). Press **Submit new issue**, then clear the sent comments.
-
-Long batches are split into several issues automatically. If one comment is too long for a link, the text is copied to your clipboard so you can paste it into the issue.
+3. Write *What should change?*, optionally choose **Nice to have / Important / Must fix**, and press **Add note**. Each note gets a numbered pin on the page. Add as many as you like, across pages and versions. They're saved in this browser (`localStorage`), so a refresh won't lose them.
+4. Press **Notes** to open the list. Every note shows its page, version, section or element, comment, priority, and date. You can edit a note, delete it, or mark it done. On the current page, click a note to jump to that element and highlight it.
+5. **Copy list** puts the notes on the clipboard as Markdown. **Download** saves a `protec-review-notes.md` file in the browser. Nothing is uploaded.
 
 **When it shows:** only on `*.github.io`, or on any address with `?review=1` (remembered in that browser). `?review=0` hides it again. On the real domain it stays hidden unless you add `?review=1`. At go-live you can also delete `assets/js/review.js` and its `<script>` line from each page.
 
