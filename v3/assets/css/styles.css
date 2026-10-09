@@ -159,10 +159,10 @@ ul, ol { margin: 0 0 1em; }
   display: flex; align-items: flex-end; color: #fff; overflow: hidden;
   background: var(--ink);
 }
-.hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 62%; }
 .hero__shade {
   position: absolute; inset: 0;
-  background: linear-gradient(90deg, rgba(8,6,5,.78) 0%, rgba(8,6,5,.42) 48%, rgba(8,6,5,.18) 100%);
+  background: linear-gradient(90deg, rgba(8,6,5,.72) 0%, rgba(8,6,5,.38) 36%, rgba(8,6,5,.08) 68%, rgba(8,6,5,0) 100%);
 }
 .hero__copy { position: relative; z-index: 1; width: 100%; padding-top: calc(var(--header-h) + 2.2rem); padding-bottom: 5.2rem; container-type: inline-size; }
 .hero h1 {
