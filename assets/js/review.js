@@ -368,7 +368,7 @@
     ".item.is-current{border-color:var(--b);box-shadow:0 0 0 3px rgba(240,71,37,.12)}",
     ".item--done{background:#f6f7f8}",
     ".item-main{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;width:100%;margin:0;padding:0;border:0;background:transparent;color:inherit;font:inherit;text-align:left;border-radius:8px}",
-    ".item-main--jump{cursor:pointer}",
+    ".item-main--jump{cursor:pointer;user-select:none;-webkit-user-select:none}",
     ".item-main--jump:hover .item-text{text-decoration:underline;text-underline-offset:2px}",
     ".num{grid-row:1 / -1;align-self:start;display:grid;place-items:center;width:24px;height:24px;border-radius:50% 50% 50% 4px;background:var(--b);color:#fff;font-weight:700;font-size:12px}",
     ".num.other{background:#aeb6bf}",
@@ -960,6 +960,18 @@
         "aria-label": "Show note " + n + " on this page"
       }, mainKids);
       main.addEventListener("click", function () { flash(c); });
+      // A slightly dragged press still jumps, and the note text cannot be selected in place of the click.
+      var down = null;
+      main.addEventListener("pointerdown", function (e) {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        down = { x: e.clientX, y: e.clientY };
+      });
+      main.addEventListener("pointerup", function (e) {
+        if (!down) return;
+        var dx = Math.abs(e.clientX - down.x), dy = Math.abs(e.clientY - down.y);
+        down = null;
+        if (dx <= 10 && dy <= 10) flash(c);
+      });
       main.addEventListener("keydown", function (e) {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flash(c); }
       });
