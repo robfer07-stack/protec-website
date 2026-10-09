@@ -1,8 +1,9 @@
 /* ==========================================================================
    ProTec Dental Laboratory — review.js  (PREVIEW-ONLY review / feedback tool)
 
-   Lets a reviewer point at any part of a page, write what should change, and
-   send the notes to GitHub as a pre-filled issue (label: site-feedback).
+   Lets the owner point at any part of a page, write what should change, and
+   keep those notes as a list in this browser. Nothing is sent anywhere:
+   no GitHub issue, no bot, no server. Copy and Download stay on this computer.
 
    When it runs (otherwise this file does nothing at all):
      • the site is on *.github.io (the GitHub Pages preview), or
@@ -16,14 +17,17 @@
      1. "Review" button (bottom-right) → pick mode. Hover (or Tab / arrow
         keys) to highlight an element; click / tap / Enter selects it.
         Esc or the "Cancel" button leaves pick mode.
-     2. A panel asks "What should change?" + optional priority. Comments are
-        kept in localStorage (survive refresh, shared across pages) and shown
-        as numbered pins on the page.
-     3. "Send to ProTec Website bot" opens github.com/…/issues/new with the
-        title/body/label pre-filled. You just press "Submit new issue".
+     2. A panel asks "What should change?" + optional priority. Notes are
+        kept in localStorage (survive refresh, shared across pages and
+        versions) and shown as numbered pins on the page.
+     3. "Notes" opens the full list. Each note shows its page, version,
+        section or element, comment, priority, and date. Edit, delete, or
+        mark done. Click a note on the current page to jump to its element.
+     4. "Copy list" puts Markdown on the clipboard. "Download" saves a .md
+        file in the browser. Neither uploads anything.
 
    All UI lives inside a Shadow DOM so the site's CSS can't affect it (and it
-   can't affect the site). No dependencies.
+   can't affect the site). No dependencies. No network calls.
    ========================================================================== */
 (function () {
   "use strict";
@@ -32,10 +36,6 @@
      0. Config + activation check
      --------------------------------------------------------------------- */
   var CONFIG = {
-    repo: "robfer07-stack/protec-website",
-    label: "site-feedback",
-    botName: "ProTec Website bot",
-    maxUrlLength: 7000,            // GitHub/browsers start failing ~8k
     snippetLength: 120,
     storageKey: "protecReview.comments.v1",
     flagKey: "protecReview.enabled",
@@ -70,12 +70,14 @@
      --------------------------------------------------------------------- */
   var host, root;            // shadow host + shadow root
   var els = {};              // references to UI nodes
-  var comments = [];         // [{id, url, path, selector, tag, snippet, section, comment, priority, viewport, created, updated}]
+  var comments = [];         // [{id, url, path, selector, tag, label, snippet, section, comment, priority, viewport, created, updated, done, doneAt}]
   var picking = false;       // pick mode on?
   var candidate = null;      // element currently highlighted in pick mode
   var draft = null;          // comment being created/edited in the form
-  var pendingSend = null;    // {chunks:[{url, ids}], opened:Set, clipboard:bool}
   var repick = null;         // {id, comment, priority} when re-picking the element of an existing/unsaved comment
+  var spotlight = null;      // element briefly highlighted after clicking a note
+  var spotlightId = null;    // id of the note being highlighted
+  var spotlightTimer = null;
   var rafPending = false;
 
   var PRIORITIES = [
@@ -310,7 +312,7 @@
     ".picking .pin{pointer-events:none;opacity:.55}",
 
     /* panel */
-    ".panel{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:calc(max(14px,env(safe-area-inset-bottom)) + 56px);z-index:2147483002;width:min(380px,calc(100vw - 28px));max-height:min(620px,calc(100vh - 100px));display:flex;flex-direction:column;background:#fff;border-radius:16px;box-shadow:0 30px 60px -20px rgba(18,22,29,.45),0 0 0 1px rgba(18,22,29,.08);overflow:hidden}",
+    ".panel{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:calc(max(14px,env(safe-area-inset-bottom)) + 56px);z-index:2147483002;width:min(420px,calc(100vw - 28px));max-height:min(640px,calc(100vh - 100px));display:flex;flex-direction:column;background:#fff;border-radius:16px;box-shadow:0 30px 60px -20px rgba(18,22,29,.45),0 0 0 1px rgba(18,22,29,.08);overflow:hidden}",
     "@media (max-width:600px){.panel{left:0;right:0;bottom:0;width:100%;max-height:72vh;border-radius:16px 16px 0 0;padding-bottom:env(safe-area-inset-bottom)}}",
     ".p-head{display:flex;align-items:center;gap:10px;padding:12px 12px 12px 16px;border-bottom:1px solid var(--line);background:#fbfbfc}",
     ".p-head h2{margin:0;font:800 15px/1.2 Manrope,Inter,system-ui,sans-serif;flex:1}",
@@ -323,7 +325,7 @@
     ".p-head,.p-foot{flex:none}",
     ".el-actions{display:flex;flex-wrap:wrap;gap:4px 16px;margin:-4px 0 12px;font-size:13px}",
     ".p-foot{padding:12px 16px 14px;border-top:1px solid var(--line);background:#fbfbfc}",
-    ".btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--b);background:var(--b);color:#fff;font-weight:700;cursor:pointer}",
+    ".btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--b);background:var(--b);color:#fff;font-weight:700;cursor:pointer}",
     ".btn svg{width:16px;height:16px;flex:none}",
     ".btn:hover{background:var(--b6);border-color:var(--b6)}",
     ".btn[disabled]{opacity:.45;cursor:not-allowed}",
@@ -334,6 +336,7 @@
     ".link-btn{border:0;background:none;padding:2px 0;color:var(--b6);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px}",
     ".link-btn:hover{color:var(--ink)}",
     ".row{display:flex;gap:8px;flex-wrap:wrap}",
+    ".row+.row{margin-top:8px}",
     ".row>.btn{flex:1}",
     ".hint{margin:8px 0 0;font-size:12.5px;color:var(--muted)}",
     ".hint strong{color:var(--ink)}",
@@ -361,21 +364,32 @@
 
     /* list */
     "ol.list{list-style:none;margin:0;padding:0;display:grid;gap:10px}",
-    ".item{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px}",
+    ".item{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}",
     ".item.is-current{border-color:var(--b);box-shadow:0 0 0 3px rgba(240,71,37,.12)}",
-    ".num{grid-row:span 3;display:grid;place-items:center;width:24px;height:24px;border-radius:50% 50% 50% 4px;background:var(--b);color:#fff;font-weight:700;font-size:12px}",
+    ".item--done{background:#f6f7f8}",
+    ".item-main{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;width:100%;margin:0;padding:0;border:0;background:transparent;color:inherit;font:inherit;text-align:left;border-radius:8px}",
+    ".item-main--jump{cursor:pointer}",
+    ".item-main--jump:hover .item-text{text-decoration:underline;text-underline-offset:2px}",
+    ".num{grid-row:1 / -1;align-self:start;display:grid;place-items:center;width:24px;height:24px;border-radius:50% 50% 50% 4px;background:var(--b);color:#fff;font-weight:700;font-size:12px}",
     ".num.other{background:#aeb6bf}",
+    ".num.done{background:#8b939e}",
     ".item-meta{font-size:12px;color:var(--muted);display:flex;gap:6px;flex-wrap:wrap;align-items:center}",
-    ".item-text{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}",
+    ".item-where,.item-el{font-size:12.5px;overflow-wrap:anywhere}",
+    ".item-where{font-weight:700}",
+    ".item-el{color:var(--muted)}",
+    ".item-text{margin:2px 0 0;overflow-wrap:anywhere;white-space:pre-wrap}",
+    ".item--done .item-text{color:var(--muted);text-decoration:line-through}",
+    ".item-date{font-size:12px;color:var(--muted)}",
     ".badge{padding:1px 7px;border-radius:999px;font-size:11px;font-weight:700;background:#eef0f3;color:var(--ink)}",
     ".badge--important{background:#fff1d6;color:#8a5a00}",
     ".badge--must{background:var(--b);color:#fff}",
-    ".item-actions{display:flex;gap:14px;font-size:13px}",
+    ".badge--done{background:#ecfaf1;color:#146c36}",
+    ".item-actions{display:flex;flex-wrap:wrap;gap:2px 14px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:13px}",
+    ".item-actions .link-btn{min-height:32px}",
+    "@media (max-width:600px){.item-actions .link-btn{min-height:44px}}",
     ".group{margin:14px 0 6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}",
     ".group:first-child{margin-top:0}",
-    ".note{padding:10px 12px;border-radius:10px;background:#eef6f8;border:1px solid #cfe4ea;margin:0 0 12px;font-size:13px}",
-    ".note--ok{background:#ecfaf1;border-color:#bfe8cf}",
-    ".parts{display:grid;gap:8px;margin:10px 0 0}",
+    ".pin--done{background:#8b939e}",
     "@media (prefers-reduced-motion:reduce){*{transition:none!important}}"
   ].join("\n");
 
@@ -383,7 +397,8 @@
     pen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>',
     list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>',
     close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>',
-    send: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>'
+    copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+    download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>'
   };
 
   function init() {
@@ -502,9 +517,10 @@
 
   function positionAll() {
     if (!els.ui) return;
-    // Highlight: pick-mode candidate, or the element being commented on.
+    // Highlight: pick-mode candidate, the element being commented on, or a note just opened.
     if (picking && candidate) placeHighlight(candidate, false);
     else if (draft && draft.el) placeHighlight(draft.el, true);
+    else if (spotlight) placeHighlight(spotlight, true);
     else { els.hl.hidden = true; els.hlLabel.hidden = true; }
 
     // Pins
@@ -533,6 +549,7 @@
   function startPicking() {
     if (picking) return;
     closePanel(true);
+    clearSpotlight();
     picking = true;
     els.ui.classList.add("picking");
     els.bar.hidden = false;
@@ -650,6 +667,7 @@
 
   function selectElement(el) {
     stopPicking(false);
+    clearSpotlight();
     draft = describe(el);
     draft.el = el;
     if (repick) { draft.id = repick.id; draft.comment = repick.comment; draft.priority = repick.priority; repick = null; }
@@ -670,9 +688,10 @@
     var c = byId(id);
     if (!c) return;
     stopPicking(false);
+    clearSpotlight();
     var el = c.path === location.pathname ? findBySelector(c.selector) : null;
     draft = { id: c.id, selector: c.selector, tag: c.tag, label: c.label, snippet: c.snippet, section: c.section, comment: c.comment, priority: c.priority, el: el };
-    if (el && visibleRect(el)) el.scrollIntoView({ block: "center", behavior: "smooth" });
+    if (el && visibleRect(el)) el.scrollIntoView({ block: "center", behavior: motion() });
     openPanel("form");
   }
 
@@ -698,10 +717,9 @@
     }
     save();
     draft = null;
-    pendingSend = null;
     renderAll();
     openPanel("list");
-    announce("Comment saved. " + comments.length + " comment" + (comments.length === 1 ? "" : "s") + " ready to send.");
+    announce("Note saved. " + comments.length + " note" + (comments.length === 1 ? "" : "s") + " in this browser.");
   }
 
   function deleteComment(id) {
@@ -709,10 +727,22 @@
     if (i === -1) return;
     comments.splice(i, 1);
     save();
-    pendingSend = null;
     renderAll();
     openPanel("list");
-    announce("Comment deleted.");
+    announce("Note deleted.");
+  }
+
+  function toggleDone(id) {
+    var c = byId(id);
+    if (!c) return;
+    var now = timestamp();
+    c.done = !c.done;
+    c.updated = now;
+    if (c.done) c.doneAt = now;
+    else c.doneAt = "";
+    save();
+    renderAll();
+    announce(c.done ? "Note marked done." : "Note marked not done.");
   }
 
   /* ---------------------------------------------------------------------
@@ -723,9 +753,9 @@
     // Floating "comments" button
     var n = comments.length;
     els.listBtn.hidden = n === 0;
-    els.listBtn.innerHTML = ICONS.list + '<span class="fab-text">Comments</span>';
+    els.listBtn.innerHTML = ICONS.list + '<span class="fab-text">Notes</span>';
     els.listBtn.appendChild(h("span", { class: "count", text: String(n) }));
-    els.listBtn.setAttribute("aria-label", n + " review comment" + (n === 1 ? "" : "s") + " — open list");
+    els.listBtn.setAttribute("aria-label", n + " review note" + (n === 1 ? "" : "s") + " — open list");
 
     // Pins for comments on THIS page (number = position in the full list)
     els.pins.innerHTML = "";
@@ -733,8 +763,8 @@
       if (c.path !== location.pathname) return;
       els.pins.appendChild(h("div", { class: "pin-box", "data-for": c.id, hidden: true }));
       els.pins.appendChild(h("button", {
-        class: "pin" + (draft && draft.id === c.id ? " is-current" : ""), type: "button", "data-id": c.id, hidden: true,
-        "aria-label": "Comment " + (i + 1) + ": " + truncate(c.comment, 60) + " — edit",
+        class: "pin" + (c.done ? " pin--done" : "") + ((draft && draft.id === c.id) || spotlightId === c.id ? " is-current" : ""), type: "button", "data-id": c.id, hidden: true,
+        "aria-label": "Note " + (i + 1) + (c.done ? ", done" : "") + ": " + truncate(c.comment, 60) + " — edit",
         title: truncate(c.comment, 100), text: String(i + 1),
         onclick: function () { editComment(c.id); }
       }));
@@ -764,19 +794,20 @@
   }
 
   function renderPanel(view) {
+    var scroll = els.panelBody.scrollTop;
     els.panelBody.innerHTML = "";
     els.panelFoot.innerHTML = "";
     els.panelFoot.hidden = false;
     if (view === "form" && draft) renderForm();
-    else if (view === "sent" && pendingSend) renderSent();
     else renderList();
+    if (view !== "form") els.panelBody.scrollTop = scroll;
   }
 
   function renderForm() {
     var isEdit = !!draft.id;
     var num = isEdit ? indexOf(draft.id) + 1 : comments.length + 1;
     els.panelTitle.innerHTML = "";
-    els.panelTitle.appendChild(document.createTextNode((isEdit ? "Edit comment " : "New comment ") + num));
+    els.panelTitle.appendChild(document.createTextNode((isEdit ? "Edit note " : "New note ") + num));
     els.panelTitle.appendChild(h("small", { text: "Version " + siteVersion(isEdit ? byId(draft.id).path : location.pathname) + " · " + pageLabel(isEdit ? byId(draft.id).path : location.pathname) + (draft.section ? " · " + draft.section : "") }));
 
     var errEl = h("p", { class: "err", hidden: true, id: "pr-err" });
@@ -847,24 +878,28 @@
       h("button", { class: "btn btn--ghost", type: "button", text: "Cancel", onclick: function () {
         draft = null; renderAll(); if (comments.length) openPanel("list"); else closePanel();
       } }),
-      h("button", { class: "btn", type: "button", text: isEdit ? "Save changes" : "Add comment", onclick: function () {
+      h("button", { class: "btn", type: "button", text: isEdit ? "Save changes" : "Add note", onclick: function () {
         form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event("submit", { cancelable: true }));
       } })
     ]));
-    els.panelFoot.appendChild(h("p", { class: "hint", html: "Tip: <strong>Ctrl/⌘ + Enter</strong> saves. Comments stay in this browser until you send them." }));
+    els.panelFoot.appendChild(h("p", { class: "hint", html: "Tip: <strong>Ctrl/⌘ + Enter</strong> saves. The note stays in this browser. Nothing is sent." }));
   }
 
   function cleanMultiline(s) { return String(s || "").replace(/\r\n?/g, "\n").replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim(); }
 
   function renderList() {
+    var doneCount = comments.filter(function (c) { return c.done; }).length;
+    var summary = comments.length
+      ? comments.length + " note" + (comments.length === 1 ? "" : "s") + (doneCount ? " · " + doneCount + " done" : "") + " · saved in this browser"
+      : "Nothing saved yet";
     els.panelTitle.innerHTML = "";
-    els.panelTitle.appendChild(document.createTextNode("Review comments"));
-    els.panelTitle.appendChild(h("small", { text: comments.length ? comments.length + " ready to send to the " + CONFIG.botName : "Nothing pinned yet" }));
+    els.panelTitle.appendChild(document.createTextNode("Change notes"));
+    els.panelTitle.appendChild(h("small", { text: summary }));
 
     if (!comments.length) {
-      els.panelBody.appendChild(h("p", { class: "empty", html: "Press <strong>Add a comment</strong>, then click any part of the page you want changed." }));
+      els.panelBody.appendChild(h("p", { class: "empty", html: "Press <strong>Add a note</strong>, then click the part of the page you want changed. Notes stay in this browser." }));
     } else {
-      // Group by page: this page first, then others.
+      // Group by page: this page first, then the others. Every note still carries its own page and version.
       var pages = [];
       comments.forEach(function (c) { if (pages.indexOf(c.path) === -1) pages.push(c.path); });
       pages.sort(function (a, b) { return (b === location.pathname) - (a === location.pathname); });
@@ -874,154 +909,215 @@
         var ol = h("ol", { class: "list" });
         comments.forEach(function (c, i) {
           if (c.path !== path) return;
-          var del = h("button", { class: "link-btn", type: "button", text: "Delete", "aria-label": "Delete comment " + (i + 1) });
-          del.addEventListener("click", function () {
-            // Two-step delete: first press asks, second press confirms.
-            if (del.getAttribute("data-armed") === "1") { deleteComment(c.id); return; }
-            del.setAttribute("data-armed", "1"); del.textContent = "Tap again to delete";
-            setTimeout(function () { if (del.isConnected) { del.setAttribute("data-armed", "0"); del.textContent = "Delete"; } }, 4000);
-          });
-          var actions = h("div", { class: "item-actions" }, [
-            h("button", { class: "link-btn", type: "button", text: here ? "Edit" : "Edit text", "aria-label": "Edit comment " + (i + 1), onclick: function () { editComment(c.id); } }),
-            here ? h("button", { class: "link-btn", type: "button", text: "Show", "aria-label": "Show element for comment " + (i + 1), onclick: function () { flash(c); } }) : null,
-            !here ? h("a", { class: "link-btn", href: c.url, text: "Go to page" }) : null,
-            del
-          ]);
-          ol.appendChild(h("li", { class: "item" }, [
-            h("span", { class: "num" + (here ? "" : " other"), "aria-hidden": "true", text: String(i + 1) }),
-            h("div", { class: "item-meta" }, [
-              h("span", { text: "<" + c.tag + "> “" + truncate(c.snippet, 40) + "”" }),
-              c.priority ? h("span", { class: "badge badge--" + c.priority, text: priorityLabel(c.priority) }) : null
-            ]),
-            h("p", { class: "item-text", text: c.comment }),
-            actions
-          ]));
+          ol.appendChild(renderNote(c, i, here));
         });
         els.panelBody.appendChild(ol);
       });
     }
 
-    var addBtn = h("button", { class: "btn btn--ghost", type: "button", onclick: function () { startPicking(); } });
-    addBtn.innerHTML = ICONS.pen + "Add a comment";
-    var sendBtn = h("button", { class: "btn", type: "button", disabled: comments.length ? null : true, onclick: send });
-    sendBtn.innerHTML = ICONS.send + "Send to " + CONFIG.botName;
+    var addBtn = h("button", { class: "btn btn--ghost btn--block", type: "button", onclick: function () { startPicking(); } });
+    addBtn.innerHTML = ICONS.pen + "<span>Add a note</span>";
+    var copyBtn = h("button", {
+      class: "btn btn--ghost", type: "button",
+      disabled: comments.length ? null : true,
+      "aria-label": "Copy the note list to the clipboard"
+    });
+    copyBtn.innerHTML = ICONS.copy + '<span class="btn-label">Copy list</span>';
+    copyBtn.addEventListener("click", function () { copyList(copyBtn); });
+    var downloadBtn = h("button", {
+      class: "btn btn--ghost", type: "button",
+      disabled: comments.length ? null : true,
+      "aria-label": "Download the note list as a Markdown file"
+    });
+    downloadBtn.innerHTML = ICONS.download + "<span>Download</span>";
+    downloadBtn.addEventListener("click", function () { downloadList(); });
     els.panelFoot.appendChild(h("div", { class: "row" }, [addBtn]));
-    els.panelFoot.appendChild(h("div", { class: "row", style: "margin-top:8px" }, [sendBtn]));
-    els.panelFoot.appendChild(h("p", { class: "hint", html: "Opens GitHub in a new tab with everything filled in — just press <strong>Submit new issue</strong>." }));
+    els.panelFoot.appendChild(h("div", { class: "row" }, [copyBtn, downloadBtn]));
+    els.panelFoot.appendChild(h("p", { class: "hint", text: "Copy and Download stay on this computer. Nothing is uploaded or sent." }));
   }
 
-  // Briefly scroll to + highlight the element of a comment.
+  function renderNote(c, i, here) {
+    var n = i + 1;
+    var where = c.section ? String(c.section) : "";
+    var elementLine = "Element: <" + (c.tag || "element") + "> “" + truncate(c.snippet, 80) + "”";
+    var mainKids = [
+      h("span", { class: "num" + (c.done ? " done" : here ? "" : " other"), "aria-hidden": "true", text: String(n) }),
+      h("div", { class: "item-meta" }, [
+        h("span", { text: "Version " + siteVersion(c.path) + " · " + pageLabel(c.path) }),
+        h("span", { class: "badge" + (c.priority ? " badge--" + c.priority : ""), text: c.priority ? priorityLabel(c.priority) : "No priority" }),
+        c.done ? h("span", { class: "badge badge--done", text: "Done" }) : null
+      ]),
+      where ? h("div", { class: "item-where", text: "Section: " + where }) : null,
+      h("div", { class: "item-el", text: elementLine }),
+      h("p", { class: "item-text", text: c.comment || "" }),
+      h("div", { class: "item-date", text: displayDate(c) })
+    ];
+
+    var main;
+    if (here) {
+      main = h("div", {
+        class: "item-main item-main--jump", role: "button", tabindex: "0",
+        "aria-label": "Show note " + n + " on this page"
+      }, mainKids);
+      main.addEventListener("click", function () { flash(c); });
+      main.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flash(c); }
+      });
+    } else {
+      main = h("div", { class: "item-main" }, mainKids);
+    }
+
+    var del = h("button", { class: "link-btn", type: "button", text: "Delete", "aria-label": "Delete note " + n });
+    del.addEventListener("click", function () {
+      if (del.getAttribute("data-armed") === "1") { deleteComment(c.id); return; }
+      del.setAttribute("data-armed", "1"); del.textContent = "Tap again to delete";
+      setTimeout(function () { if (del.isConnected) { del.setAttribute("data-armed", "0"); del.textContent = "Delete"; } }, 4000);
+    });
+    var actions = h("div", { class: "item-actions" }, [
+      h("button", {
+        class: "link-btn", type: "button", text: here ? "Edit" : "Edit text",
+        "aria-label": "Edit note " + n,
+        onclick: function () { editComment(c.id); }
+      }),
+      h("button", {
+        class: "link-btn", type: "button",
+        text: c.done ? "Mark not done" : "Mark done",
+        "aria-label": c.done ? "Mark note " + n + " not done" : "Mark note " + n + " done",
+        onclick: function () { toggleDone(c.id); }
+      }),
+      (!here && c.url) ? h("a", { class: "link-btn", href: c.url, text: "Open page" }) : null,
+      del
+    ]);
+    return h("li", { class: "item" + (c.done ? " item--done" : ""), "data-id": c.id }, [main, actions]);
+  }
+
+  function shortWhen(ts) {
+    var m = String(ts || "").match(/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2})/);
+    return m ? m[1] : cleanText(ts);
+  }
+
+  function displayDate(c) {
+    var created = shortWhen(c.created);
+    if (!created) return "Date not recorded";
+    if (c.done && c.doneAt) return created + " · done " + shortWhen(c.doneAt);
+    if (c.updated) return created + " · edited " + shortWhen(c.updated);
+    return created;
+  }
+
+  function motion() {
+    try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"; }
+    catch (e) { return "smooth"; }
+  }
+
+  function clearSpotlight() {
+    spotlight = null;
+    spotlightId = null;
+    if (spotlightTimer) { clearTimeout(spotlightTimer); spotlightTimer = null; }
+  }
+
+  // True when the open panel leaves too little of the element on screen to see the highlight.
+  function coveredByPanel(elRect, panelRect) {
+    var left = Math.max(elRect.left, 0);
+    var right = Math.min(elRect.right, window.innerWidth);
+    var top = Math.max(elRect.top, 0);
+    var bottom = Math.min(elRect.bottom, window.innerHeight);
+    if (right - left < 8 || bottom - top < 8) return true;
+    var ix1 = Math.max(left, panelRect.left);
+    var iy1 = Math.max(top, panelRect.top);
+    var ix2 = Math.min(right, panelRect.right);
+    var iy2 = Math.min(bottom, panelRect.bottom);
+    var overlap = (ix2 > ix1 && iy2 > iy1) ? (ix2 - ix1) * (iy2 - iy1) : 0;
+    var visible = (right - left) * (bottom - top) - overlap;
+    return visible < 120 * 48;
+  }
+
+  // Scroll to the note's element and highlight it. If the panel covers it, close the panel.
   function flash(c) {
+    if (!c || c.path !== location.pathname) return;
     var el = findBySelector(c.selector);
     if (!el || !visibleRect(el)) { announce("That element isn't visible on this page right now."); return; }
-    el.scrollIntoView({ block: "center", behavior: "smooth" });
-    var pin = els.pins.querySelector('.pin[data-id="' + c.id + '"]');
-    if (pin) { pin.classList.add("is-current"); setTimeout(function () { pin.classList.remove("is-current"); }, 1600); }
+    clearSpotlight();
+    spotlight = el;
+    spotlightId = c.id;
+    el.scrollIntoView({ block: "center", inline: "nearest", behavior: motion() });
+    schedule();
+    announce("Showing " + (c.section || c.label || "the selected element") + ".");
+    var token = spotlightId;
+    spotlightTimer = setTimeout(function () {
+      if (spotlightId !== token || !spotlight) return;
+      if (els.panel.hidden || els.panel.getAttribute("data-view") !== "list") { schedule(); return; }
+      var er = spotlight.getBoundingClientRect();
+      var pr = els.panel.getBoundingClientRect();
+      if (coveredByPanel(er, pr)) closePanel(true);
+      else schedule();
+    }, motion() === "auto" ? 40 : 480);
+    setTimeout(function () {
+      if (spotlightId !== token) return;
+      spotlight = null;
+      spotlightId = null;
+      var pin = els.pins.querySelector('.pin[data-id="' + token + '"]');
+      if (pin) pin.classList.remove("is-current");
+      schedule();
+    }, 2000);
   }
 
   /* ---------------------------------------------------------------------
-     9. Sending: build GitHub "new issue" URL(s)
+     9. Take the list away locally (clipboard or a file). Nothing is uploaded.
      --------------------------------------------------------------------- */
-  var ISSUE_BASE = "https://github.com/" + CONFIG.repo + "/issues/new";
+  function mdEscape(s) { return String(s || "").replace(/`/g, "'"); }
 
-  function commentMarkdown(c, n) {
+  function listMarkdown() {
+    var doneCount = comments.filter(function (c) { return c.done; }).length;
     var lines = [];
-    var prio = c.priority ? priorityLabel(c.priority) : "Not set";
-    lines.push("### " + n + ". " + (c.priority === "must" ? "🔴 " : c.priority === "important" ? "🟠 " : "") + truncate(c.comment.split("\n")[0], 80));
+    lines.push("# Website change notes");
     lines.push("");
-    // Quote the full comment (each line prefixed so markdown stays intact).
-    lines.push(c.comment.split("\n").map(function (l) { return "> " + l; }).join("\n"));
+    lines.push("Saved in this browser only. Nothing was sent.");
     lines.push("");
-    lines.push("- **Page:** [" + pageLabel(c.path) + "](" + c.url + ") (`" + c.path + "`)");
-    lines.push("- **Version:** " + siteVersion(c.path));
-    if (c.section) lines.push("- **Section:** " + c.section);
-    lines.push("- **Element:** `<" + c.tag + ">` — “" + c.snippet.replace(/[`]/g, "'") + "”");
-    lines.push("- **Selector:** `" + c.selector.replace(/`/g, "'") + "`");
-    lines.push("- **Priority:** " + prio);
-    lines.push("- **Viewport:** " + c.viewport);
-    lines.push("- **Added:** " + c.created + (c.updated ? " · edited " + c.updated : ""));
+    lines.push(comments.length + " note" + (comments.length === 1 ? "" : "s") + " · " + (comments.length - doneCount) + " open · " + doneCount + " done");
+    lines.push("");
+    comments.forEach(function (c, i) {
+      var first = truncate(cleanText(String(c.comment || "").split("\n")[0]), 80) || "Note";
+      lines.push("---");
+      lines.push("");
+      lines.push("## " + (i + 1) + ". " + first);
+      lines.push("");
+      lines.push(String(c.comment || "").split("\n").map(function (l) { return "> " + l; }).join("\n"));
+      lines.push("");
+      lines.push("- **Status:** " + (c.done ? "Done" : "Open"));
+      lines.push("- **Page:** " + pageLabel(c.path) + " (`" + mdEscape(c.path) + "`)");
+      lines.push("- **Version:** " + siteVersion(c.path));
+      lines.push("- **Section:** " + (c.section ? mdEscape(c.section) : "—"));
+      lines.push("- **Element:** `<" + mdEscape(c.tag) + ">` — “" + mdEscape(c.snippet) + "”");
+      lines.push("- **Selector:** `" + mdEscape(c.selector) + "`");
+      lines.push("- **Priority:** " + (c.priority ? priorityLabel(c.priority) : "Not set"));
+      lines.push("- **Date:** " + (c.created || "Unknown") + (c.updated ? " · updated " + c.updated : ""));
+      if (c.viewport) lines.push("- **Viewport:** " + c.viewport);
+      lines.push("");
+    });
     return lines.join("\n");
   }
 
-  function issueTitle(list, part, total) {
-    var pages = [];
-    list.forEach(function (c) { var p = pageLabel(c.path); if (pages.indexOf(p) === -1) pages.push(p); });
-    var must = list.filter(function (c) { return c.priority === "must"; }).length;
-    var t = "Site feedback: " + list.length + " change" + (list.length === 1 ? "" : "s") + " (" + pages.join(", ") + ")";
-    if (must) t += " — " + must + " must fix";
-    if (total > 1) t += " [part " + part + " of " + total + "]";
-    return truncate(t, 200);
-  }
-
-  function issueBody(list, startNum, part, total) {
-    var head = "Change requests from **review mode** on the website preview" +
-      (total > 1 ? " (part " + part + " of " + total + ")" : "") + ".\n\n";
-    var items = list.map(function (c, i) { return commentMarkdown(c, startNum + i); }).join("\n\n---\n\n");
-    return head + items + "\n\n<sub>Sent with ProTec review mode · " + (navigator.userAgent.match(/(Firefox|Edg|Chrome|Safari)\/[\d.]+/) || ["browser"])[0] + "</sub>";
-  }
-
-  function issueUrl(title, body) {
-    return ISSUE_BASE + "?labels=" + encodeURIComponent(CONFIG.label) +
-      "&title=" + encodeURIComponent(title) + "&body=" + encodeURIComponent(body);
-  }
-
-  // Split comments into as few issues as possible, each URL <= maxUrlLength.
-  function buildChunks() {
-    var groups = [], cur = [];
-    var fits = function (list) { return issueUrl(issueTitle(list, 9, 9), issueBody(list, 99, 9, 9)).length <= CONFIG.maxUrlLength; };
-    for (var i = 0; i < comments.length; i++) {
-      var tryList = cur.concat([comments[i]]);
-      if (fits(tryList)) { cur = tryList; continue; }
-      if (!cur.length) return null;               // a single comment is too long by itself
-      groups.push(cur);
-      cur = [comments[i]];
-      if (!fits(cur)) return null;
-    }
-    if (cur.length) groups.push(cur);
-    var total = groups.length, num = 1;
-    return groups.map(function (g, idx) {
-      var chunk = {
-        ids: g.map(function (c) { return c.id; }),
-        count: g.length,
-        title: issueTitle(g, idx + 1, total),
-        url: issueUrl(issueTitle(g, idx + 1, total), issueBody(g, num, idx + 1, total))
-      };
-      num += g.length;
-      return chunk;
+  function copyList(btn) {
+    copyText(listMarkdown()).then(function (ok) {
+      var label = btn.querySelector(".btn-label");
+      if (label) label.textContent = ok ? "Copied" : "Copy failed";
+      announce(ok ? "Change list copied to the clipboard." : "Could not copy. Use Download instead.");
+      setTimeout(function () { if (label && label.isConnected) label.textContent = "Copy list"; }, 2000);
     });
   }
 
-  function openUrl(url) {
-    window.__protecReviewLastUrl = url; // handy for automated tests; harmless otherwise
-    // "noopener" keeps GitHub from controlling this tab. (With noopener the
-    // return value is always null, so a blocked pop-up can't be detected — the
-    // panel always shows a fallback link.)
-    window.open(url, "_blank", "noopener");
-  }
-
-  function send() {
-    if (!comments.length) return;
-    var chunks = buildChunks();
-    if (chunks) {
-      pendingSend = { chunks: chunks, opened: {}, clipboard: false };
-      openUrl(chunks[0].url);
-      pendingSend.opened[0] = true;
-      openPanel("sent");
-      announce(chunks.length === 1 ? "GitHub opened in a new tab. Press Submit new issue there." : "Part 1 of " + chunks.length + " opened in a new tab.");
-      return;
-    }
-    // Too long for a link: copy markdown to the clipboard, open an empty issue.
-    var md = issueBody(comments, 1, 1, 1);
-    var title = issueTitle(comments, 1, 1);
-    copyText(md).then(function (ok) {
-      pendingSend = {
-        chunks: [{ ids: comments.map(function (c) { return c.id; }), count: comments.length, title: title,
-          url: issueUrl(title, "<!-- Paste the copied review comments here (Ctrl/⌘ + V) -->\n\n") }],
-        opened: { 0: true }, clipboard: ok, markdown: md
-      };
-      openUrl(pendingSend.chunks[0].url);
-      openPanel("sent");
-    });
+  function downloadList() {
+    var blob = new Blob([listMarkdown()], { type: "text/markdown;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "protec-review-notes.md";
+    a.rel = "noopener";
+    root.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { try { URL.revokeObjectURL(url); } catch (e) { /* ignore */ } }, 1500);
+    announce("Change list downloaded as a Markdown file. Nothing was uploaded.");
   }
 
   function copyText(text) {
@@ -1032,69 +1128,17 @@
   }
   function legacyCopy(text) {
     var ta = document.createElement("textarea");
-    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
-    document.body.appendChild(ta); ta.select();
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.setAttribute("aria-hidden", "true");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
     var ok = false;
     try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
     ta.remove();
     return ok;
-  }
-
-  function renderSent() {
-    var s = pendingSend, total = s.chunks.length;
-    els.panelTitle.innerHTML = "";
-    els.panelTitle.appendChild(document.createTextNode("Almost done"));
-    els.panelTitle.appendChild(h("small", { text: "Finish on GitHub" }));
-
-    if (s.clipboard !== false && s.markdown) {
-      els.panelBody.appendChild(h("div", { class: "note", html:
-        "These comments were too long for one link, so they’re <strong>copied to your clipboard</strong>. " +
-        "In the GitHub tab, click the big text box, <strong>paste</strong> (Ctrl/⌘ + V), then press <strong>Submit new issue</strong>." }));
-    } else if (s.markdown) {
-      // Clipboard blocked: show the text so it can be copied by hand.
-      els.panelBody.appendChild(h("div", { class: "note", html: "Copy everything below, paste it into the GitHub issue, then press <strong>Submit new issue</strong>." }));
-      var ta = h("textarea", { readonly: true, rows: "8", "aria-label": "Review comments as text" });
-      ta.value = s.markdown;
-      els.panelBody.appendChild(ta);
-    } else {
-      els.panelBody.appendChild(h("div", { class: "note note--ok", html:
-        "GitHub opened in a new tab with everything filled in. Just press the green <strong>Submit new issue</strong> button and the " +
-        CONFIG.botName + " will pick it up." }));
-    }
-
-    var link = h("a", { class: "link-btn", href: s.chunks[0].url, target: "_blank", rel: "noopener", text: "Nothing opened? Open GitHub here" });
-    link.addEventListener("click", function () { window.__protecReviewLastUrl = s.chunks[0].url; });
-    els.panelBody.appendChild(h("p", { class: "hint" }, [link]));
-
-    // Extra parts need their own click (browsers block several pop-ups at once).
-    if (total > 1) {
-      els.panelBody.appendChild(h("p", { class: "hint", html: "Your comments were split into <strong>" + total + " issues</strong> so each link stays short enough. Open and submit each part:" }));
-      var parts = h("div", { class: "parts" });
-      s.chunks.forEach(function (ch, i) {
-        var b = h("button", { class: "btn btn--sm " + (s.opened[i] ? "btn--ghost" : ""), type: "button",
-          text: (s.opened[i] ? "✓ Opened part " : "Open part ") + (i + 1) + " of " + total + " (" + ch.count + " comment" + (ch.count === 1 ? "" : "s") + ")",
-          onclick: function () { openUrl(ch.url); s.opened[i] = true; renderPanel("sent"); } });
-        parts.appendChild(b);
-      });
-      els.panelBody.appendChild(parts);
-    }
-
-    var allOpened = s.chunks.every(function (_, i) { return s.opened[i]; });
-    var n = s.chunks.reduce(function (a, ch) { return a + ch.count; }, 0);
-    els.panelFoot.appendChild(h("p", { class: "hint", style: "margin:0 0 8px", html: "<strong>Submitted on GitHub?</strong> Then clear the " + n + " sent comment" + (n === 1 ? "" : "s") + " from this browser." }));
-    els.panelFoot.appendChild(h("div", { class: "row" }, [
-      h("button", { class: "btn btn--ghost", type: "button", text: "Keep them", onclick: function () { pendingSend = null; openPanel("list"); } }),
-      h("button", { class: "btn", type: "button", text: allOpened ? "Clear sent comments" : "Clear opened parts", onclick: function () {
-        var ids = {};
-        s.chunks.forEach(function (ch, i) { if (s.opened[i]) ch.ids.forEach(function (id) { ids[id] = true; }); });
-        comments = comments.filter(function (c) { return !ids[c.id]; });
-        save();
-        pendingSend = null;
-        renderAll();
-        announce("Sent comments cleared.");
-        if (comments.length) openPanel("list"); else closePanel();
-      } })
-    ]));
   }
 
   /* ---------------------------------------------------------------------
